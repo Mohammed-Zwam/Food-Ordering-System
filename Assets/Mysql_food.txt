@@ -1,0 +1,102 @@
+CREATE DATABASE IF NOT EXISTS food_ordering_system;
+USE food_ordering_system;
+
+CREATE TABLE IF NOT EXISTS users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20),
+    image_path VARCHAR(255),
+    zone VARCHAR(100),
+    role ENUM('CUSTOMER', 'RESTAURANT', 'DELIVERY') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS restaurants (
+    restaurant_id INT PRIMARY KEY,
+    avg_rate DECIMAL(3, 2) DEFAULT 0.00,
+    opening_hours VARCHAR(100),
+    FOREIGN KEY (restaurant_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS menus (
+    food_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    restaurant_id INT NOT NULL,
+    category VARCHAR(100),
+    food_item_name VARCHAR(255) NOT NULL,
+    food_item_image VARCHAR(255),
+    price DECIMAL(10, 2) NOT NULL,
+    description TEXT,
+    availability BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS cart (
+    customer_id INT NOT NULL,
+    food_item_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    PRIMARY KEY (customer_id, food_item_id),
+    FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (food_item_id) REFERENCES menus(food_item_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    restaurant_id INT NOT NULL,
+    customer_id INT NOT NULL,
+    delivery_id INT,
+    delivery_fee DECIMAL(10, 2) DEFAULT 0.00,
+    total_price DECIMAL(10, 2) NOT NULL,
+    status ENUM('Pending', 'Accepted', 'Cooking', 'Picked Up', 'Delivered', 'Cancelled') DEFAULT 'Pending',
+    delivery_address TEXT NOT NULL,
+    order_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    payment_method VARCHAR(50),
+    payment_status ENUM('Pending', 'Paid', 'Failed') DEFAULT 'Pending',
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id),
+    FOREIGN KEY (customer_id) REFERENCES users(user_id),
+    FOREIGN KEY (delivery_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    food_item_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (food_item_id) REFERENCES menus(food_item_id)
+);
+
+CREATE TABLE IF NOT EXISTS reviews (
+    review_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT UNIQUE NOT NULL,
+    customer_id INT NOT NULL,
+    restaurant_id INT NOT NULL,
+    rating INT CHECK (rating >= 1 AND rating <= 5),
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES users(user_id),
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id)
+);
+
+INSERT INTO users (username, password, phone_number, zone, role) VALUES 
+('Ahmed Ali', 'hashed_pass_123', '01012345678', 'Cairo', 'Customer'),
+('Sara Mohamed', 'hashed_pass_456', '01112345678', 'Giza', 'Customer');
+
+INSERT INTO users (username, password, phone_number, image_logo, zone, role) VALUES 
+('Burger King', 'bk_pass_secure', '19019', 'bk_logo.png', 'Cairo', 'Restaurant'),
+('Pizza Hut', 'ph_pass_secure', '19000', 'ph_logo.png', 'Giza', 'Restaurant');
+
+INSERT INTO users (username, password, phone_number, zone, role) VALUES 
+('Driver Mike', 'driver_pass_1', '01234567890', 'Cairo', 'Delivery');
+
+INSERT INTO restaurants (restaurant_id, avg_rate, opening_hours) VALUES 
+((SELECT user_id FROM users WHERE username='Burger King'), 4.5, '10:00 AM - 02:00 AM'),
+((SELECT user_id FROM users WHERE username='Pizza Hut'), 4.2, '11:00 AM - 01:00 AM');
+
+INSERT INTO menus (restaurant_id, category, food_item_name, price, description, availability) VALUES 
+((SELECT user_id FROM users WHERE username='Burger King'), 'Burgers', 'Whopper Sandwich', 85.00, 'Flame-grilled beef patty with fresh ingredients', TRUE),
+((SELECT user_id FROM users WHERE username='Burger King'), 'Sides', 'French Fries Medium', 25.50, 'Golden crispy fries', TRUE),
+((SELECT user_id FROM users WHERE username='Pizza Hut'), 'Pizza', 'Super Supreme', 120.00, 'Loaded with pepperoni, beef, and vegetables', TRUE),
+((SELECT user_id FROM users WHERE username='Pizza Hut'), 'Drinks', 'Pepsi Can', 15.00, '330ml Cold Drink', TRUE);
