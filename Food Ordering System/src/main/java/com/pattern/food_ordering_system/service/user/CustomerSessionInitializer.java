@@ -14,8 +14,6 @@ public class CustomerSessionInitializer implements UserSessionInitializer {
     @Override
     public void loadUserData() {
         CustomerService.loadCustomerCart();
-
-
-        // Add Customer Orders
+        CustomerService.loadCustomerOrders();
     }
 }

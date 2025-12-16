@@ -1,3 +1,0 @@
-INDEX VERSION 1.134
-file:/D:/PROGRAMMING/PROJECTS/Java%20Backend%20Track/Food%20Ordering%20System%20(Design%20Patterns%20Project)/Food%20Ordering%20System/.metadata/.plugins/org.eclipse.jdt.core/1865797976.index
-meta_index

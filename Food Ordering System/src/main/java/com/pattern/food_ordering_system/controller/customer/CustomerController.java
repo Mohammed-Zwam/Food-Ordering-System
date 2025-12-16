@@ -7,6 +7,7 @@ import com.pattern.food_ordering_system.model.restaurant.MenuComponent;
 import com.pattern.food_ordering_system.model.user.Customer;
 import com.pattern.food_ordering_system.model.user.UserFactory;
 import com.pattern.food_ordering_system.repository.CustomerRepo;
+import com.pattern.food_ordering_system.utils.AlertHandler;
 import com.pattern.food_ordering_system.utils.InputParser;
 import com.pattern.food_ordering_system.utils.ViewHandler;
 import javafx.event.ActionEvent;
@@ -14,6 +15,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -21,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -30,7 +34,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
-
     @FXML
     private Label lblWelcome;
 
@@ -263,4 +266,37 @@ public class CustomerController implements Initializable {
         emptyCartMessageContainer.setVisible(isEmpty);
         emptyCartMessageContainer.setManaged(isEmpty);
     }
+    @FXML
+    private void onCheckout() {
+        if (customer.getCart().isEmpty()) {
+            AlertHandler.showWarning("Empty Cart", "Plz add items to your cart before checkout");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml-views/customer-views/checkout-dialog.fxml")
+            );
+
+            Parent root = loader.load();
+            CheckoutDialogController checkoutController = loader.getController();
+            checkoutController.setParentController(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Checkout");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            AlertHandler.showError("Error", "Failed to open checkout");
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void navigateToOrdersView(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        ViewHandler.changeView(stage, "customer-views/customer-orders-view");
+    }
+
 }
