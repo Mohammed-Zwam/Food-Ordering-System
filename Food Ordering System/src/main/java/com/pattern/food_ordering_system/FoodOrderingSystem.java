@@ -1,8 +1,5 @@
 package com.pattern.food_ordering_system;
 
-import com.pattern.food_ordering_system.model.customer.Cart;
-import com.pattern.food_ordering_system.model.customer.CartItem;
-import com.pattern.food_ordering_system.repository.CustomerRepo;
 import com.pattern.food_ordering_system.utils.ViewHandler;
 import javafx.application.Application;
 

@@ -1,21 +1,15 @@
 package com.pattern.food_ordering_system.controller.customer;
 
-import com.pattern.food_ordering_system.model.customer.CartItem;
+import com.pattern.food_ordering_system.entity.CartItem;
 import com.pattern.food_ordering_system.model.customer.FoodItem;
 import com.pattern.food_ordering_system.service.customer.CustomerService;
 import com.pattern.food_ordering_system.utils.AlertHandler;
-import com.pattern.food_ordering_system.utils.exception.CartException;
 import com.pattern.food_ordering_system.utils.exception.InvalidQuantityException;
-import com.pattern.food_ordering_system.utils.exception.RestaurantMismatchException;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 
 public class CartCardController {

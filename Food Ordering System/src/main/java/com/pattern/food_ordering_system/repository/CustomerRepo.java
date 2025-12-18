@@ -1,6 +1,8 @@
 package com.pattern.food_ordering_system.repository;
 
 import com.pattern.food_ordering_system.config.DBConnection;
+import com.pattern.food_ordering_system.entity.CartItem;
+import com.pattern.food_ordering_system.entity.OrderItem;
 import com.pattern.food_ordering_system.model.customer.*;
 import com.pattern.food_ordering_system.entity.Order;
 import com.pattern.food_ordering_system.model.restaurant.Menu;
@@ -140,7 +142,7 @@ public class CustomerRepo {
         return cart;
     }
 
-    public static void insertOrder(Order order) throws SQLException {
+    public static void insertOrder(CustomerOrder order) throws SQLException {
         String orderSql = """
                     INSERT INTO orders (restaurant_id, customer_id, total_price, payment_method, 
                                        delivery_address, order_time, status)
@@ -165,31 +167,31 @@ public class CustomerRepo {
                 order.setOrderId(generatedKeys.getLong(1));
             }
 
-            insertOrderItems(conn, order);
+            insertOrderItems(order);
             clearCartByCustomerId(order.getCustomerId());
         }
     }
 
-    private static void insertOrderItems(Connection conn, Order order) throws SQLException {
+    private static void insertOrderItems(CustomerOrder order) throws SQLException {
         String itemSql = """
                     INSERT INTO order_items (order_id, food_item_id, quantity, price)
                     VALUES (?, ?, ?, ?);
                 """;
 
-        try (PreparedStatement pstmt = conn.prepareStatement(itemSql)) {
-            for (CartItem item : order.getItems()) {
+        try (PreparedStatement pstmt = DBConnection.getConnection().prepareStatement(itemSql)) {
+            for (OrderItem orderItem : order.getItems()) {
                 pstmt.setLong(1, order.getOrderId());
-                pstmt.setLong(2, item.getFoodItem().getId());
-                pstmt.setInt(3, item.getQuantity());
-                pstmt.setDouble(4, item.getFoodItem().getPrice());
+                pstmt.setLong(2, orderItem.getFoodItemId());
+                pstmt.setInt(3, orderItem.getQuantity());
+                pstmt.setDouble(4, orderItem.getPrice());
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
         }
     }
 
-    public static List<Order> findOrdersByCustomerId(long customerId) {
-        List<Order> orders = new ArrayList<>();
+    public static List<CustomerOrder> findOrdersByCustomerId(long customerId) {
+        List<CustomerOrder> orders = new ArrayList<>();
 
         String sql = """
                     SELECT o.*, u.username as restaurant_name, u.image_path as restaurant_logo
@@ -208,17 +210,13 @@ public class CustomerRepo {
             while (rs.next()) {
                 long currentOrderId = rs.getLong("order_id");
 
-                List<CartItem> orderItems = findItemsByOrderId(currentOrderId, conn);
+                List<OrderItem> orderItems = findItemsByOrderId(currentOrderId);
 
-                Order order = new Order(
-                        rs.getLong("customer_id"),
-                        rs.getLong("restaurant_id"),
-                        orderItems,
-                        rs.getDouble("total_price"),
-                        PaymentMethod.valueOf(rs.getString("payment_method")),
-                        rs.getString("delivery_address"),
-                        rs.getString("restaurant_name")
-                );
+                CustomerOrder order = new CustomerOrder();
+                order.setItems(orderItems);
+                order.setPaymentMethod(PaymentMethod.valueOf(rs.getString("payment_method")));
+                order.setRestaurantName(rs.getString("restaurant_name"));
+                order.setTotalPriceWithFee(rs.getDouble("total_price"));
                 order.setRestaurantLogo(rs.getString("restaurant_logo"));
                 order.setOrderId(rs.getLong("order_id"));
                 order.setStatus(OrderStatus.valueOf(rs.getString("status")));
@@ -236,33 +234,32 @@ public class CustomerRepo {
         return orders;
     }
 
-    private static List<CartItem> findItemsByOrderId(long orderId, Connection conn) {
-        List<CartItem> items = new ArrayList<>();
+    private static List<OrderItem> findItemsByOrderId(long orderId) {
+        List<OrderItem> items = new ArrayList<>();
         String sql = """
                     SELECT oi.quantity, m.* FROM order_items oi
                     JOIN menus m ON oi.food_item_id = m.food_item_id
                     WHERE oi.order_id = ?
                 """;
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = DBConnection.getConnection().prepareStatement(sql)) {
 
             pstmt.setLong(1, orderId);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                FoodItem food = new FoodItem();
-                food.setId(rs.getLong("food_item_id"));
-                food.setName(rs.getString("food_item_name"));
-                food.setPrice(rs.getDouble("price"));
-                food.setImagePath(rs.getString("food_item_image"));
-
-                items.add(new CartItem(food, rs.getInt("quantity")));
+                OrderItem orderItem = new OrderItem(
+                        -1,
+                        rs.getString("food_item_name"),
+                        rs.getLong("food_item_id"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price")
+                );
+                items.add(orderItem);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return items;
     }
-
-
 }

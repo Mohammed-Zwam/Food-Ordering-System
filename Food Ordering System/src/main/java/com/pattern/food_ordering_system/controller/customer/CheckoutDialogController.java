@@ -1,8 +1,8 @@
 package com.pattern.food_ordering_system.controller.customer;
 
-import com.pattern.food_ordering_system.entity.Order;
 import com.pattern.food_ordering_system.model.customer.Cart;
-import com.pattern.food_ordering_system.model.customer.CartItem;
+import com.pattern.food_ordering_system.entity.CartItem;
+import com.pattern.food_ordering_system.model.customer.CustomerOrder;
 import com.pattern.food_ordering_system.model.customer.PaymentMethod;
 import com.pattern.food_ordering_system.model.user.Customer;
 import com.pattern.food_ordering_system.model.user.UserFactory;
@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -84,32 +83,16 @@ public class CheckoutDialogController {
         }
         try {
             PaymentGateway paymentGateway = PaymentFactory.getPaymentGateway(method);
-            double totalAmount = customer.getCart().getTotalPrice();
-            boolean isPaid = paymentGateway.processPayment(totalAmount);
+            double totalPriceWithFee = customer.getCart().getTotalPrice(); // + FEE
+            boolean isPaid = paymentGateway.processPayment(totalPriceWithFee);
 
             if (!isPaid) {
                 AlertHandler.showError("Payment Failed", "Transaction could not be processed.");
                 return;
             }
-            Cart cart = customer.getCart();
 
 
-            List<CartItem> cartItems = new ArrayList<>();
-            for (CartItem item : cart.getCartItems()) {
-                cartItems.add(new CartItem(item.getFoodItem(), item.getQuantity()));
-            }
-
-            Order order = new Order(
-                    customer.getId(),
-                    cart.getRestaurantId(),
-                    cartItems,
-                    totalAmount,
-                    method,
-                    address,
-                    cart.getRestaurantName()
-            );
-
-            CustomerService.createOrder(order);
+            CustomerService.createOrder(address, method, totalPriceWithFee);
             CustomerService.clearCart();
             parentController.loadCartMenu();
             AlertHandler.showInfo("Success", "Order placed successfully!");

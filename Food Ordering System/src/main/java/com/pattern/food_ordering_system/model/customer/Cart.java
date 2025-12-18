@@ -1,8 +1,9 @@
 package com.pattern.food_ordering_system.model.customer;
 
+import com.pattern.food_ordering_system.entity.CartItem;
+
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 public class Cart implements ICart {
     private HashMap<Long, CartItem> cartItems = new HashMap<>();

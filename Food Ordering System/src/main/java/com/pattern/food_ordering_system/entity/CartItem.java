@@ -1,4 +1,6 @@
-package com.pattern.food_ordering_system.model.customer;
+package com.pattern.food_ordering_system.entity;
+
+import com.pattern.food_ordering_system.model.customer.FoodItem;
 
 public class CartItem {
     private FoodItem foodItem;

@@ -1,6 +1,7 @@
 package com.pattern.food_ordering_system.controller.customer;
 
 import com.pattern.food_ordering_system.entity.Order;
+import com.pattern.food_ordering_system.model.customer.CustomerOrder;
 import com.pattern.food_ordering_system.model.user.Customer;
 import com.pattern.food_ordering_system.model.user.UserFactory;
 import com.pattern.food_ordering_system.service.customer.CustomerService;
@@ -43,15 +44,15 @@ public class CustomerOrdersController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Task<List<Order>> task = new Task<>() {
+        Task<List<CustomerOrder>> task = new Task<>() {
             @Override
-            protected List<Order> call() throws Exception {
+            protected List<CustomerOrder> call() throws Exception {
                 return customer.getOrders();
             }
         };
 
         task.setOnSucceeded(event -> {
-            List<Order> orders = task.getValue();
+            List<CustomerOrder> orders = task.getValue();
             renderOrders(orders);
         });
 
@@ -69,9 +70,9 @@ public class CustomerOrdersController implements Initializable {
         }
     }
 
-    private void renderOrders(List<Order> orders) {
+    private void renderOrders(List<CustomerOrder> orders) {
         ordersContainer.getChildren().clear();
-        for (Order order : orders) {
+        for (CustomerOrder order : orders) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml-views/customer-views/order-card.fxml"));
                 VBox card = loader.load();

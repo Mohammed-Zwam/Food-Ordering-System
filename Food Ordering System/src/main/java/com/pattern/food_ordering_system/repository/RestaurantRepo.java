@@ -1,11 +1,21 @@
 package com.pattern.food_ordering_system.repository;
 
 import com.pattern.food_ordering_system.config.DBConnection;
+import com.pattern.food_ordering_system.entity.CartItem;
 import com.pattern.food_ordering_system.entity.MenuItem;
+import com.pattern.food_ordering_system.entity.OrderItem;
+import com.pattern.food_ordering_system.model.customer.CustomerOrder;
+import com.pattern.food_ordering_system.model.customer.FoodItem;
+import com.pattern.food_ordering_system.model.customer.OrderStatus;
+import com.pattern.food_ordering_system.model.customer.PaymentMethod;
 import com.pattern.food_ordering_system.model.restaurant.Menu;
+import com.pattern.food_ordering_system.model.restaurant.RestaurantOrder;
+import com.pattern.food_ordering_system.model.user.Restaurant;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class RestaurantRepo {
@@ -45,6 +55,7 @@ public class RestaurantRepo {
             return -1;
         }
     }
+
     public static Menu getMenuByRestaurantId(long restaurantId) {
         Menu menu = new Menu("MAIN MENU");
         HashMap<String, Menu> menuCategories = new HashMap<>();
@@ -81,6 +92,7 @@ public class RestaurantRepo {
         }
         return menu;
     }
+
     public static int findAvgRateByRestaurantId(long restaurantId) {
         try {
             String sql = "SELECT rate FROM restaurants WHERE restaurant_id=?";
@@ -107,6 +119,7 @@ public class RestaurantRepo {
             return false;
         }
     }
+
     public static boolean updateFoodItem(MenuItem item) {
         String sql = "UPDATE menus SET food_item_name = ?, description = ?, price = ?, availability = ?, food_item_image = ?, category = ? WHERE food_item_id = ?";
 
@@ -129,6 +142,7 @@ public class RestaurantRepo {
         }
 
     }
+
     public static boolean deleteFoodItem(long id) {
         String sql = "DELETE FROM menus WHERE food_item_id = ?";
 
@@ -143,4 +157,76 @@ public class RestaurantRepo {
             return false;
         }
     }
+
+    public static List<RestaurantOrder> findOrdersByRestaurantId(long id) {
+        List<RestaurantOrder> orders = new ArrayList<>();
+
+        String ordersQuery = """
+                    SELECT user.username as customer_name, ords.*
+                    FROM orders ords
+                    JOIN users user
+                        ON ords.customer_id = user.user_id
+                    WHERE ords.restaurant_id = ?
+                """;
+
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(ordersQuery)) {
+            pstmt.setLong(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                RestaurantOrder restaurantOrder = new RestaurantOrder();
+                restaurantOrder.setCustomerName(rs.getString("customer_name"));
+                restaurantOrder.setOrderId(rs.getLong("order_id"));
+                restaurantOrder.setDeliveryAddress(rs.getString("delivery_address"));
+                restaurantOrder.setStatus(OrderStatus.valueOf(rs.getString("status")));
+                restaurantOrder.setOrderPrice(rs.getDouble("total_price") - rs.getDouble("delivery_fee"));
+                restaurantOrder.setOrderTime(rs.getTimestamp("order_time").toLocalDateTime());
+                restaurantOrder.setPaymentMethod(PaymentMethod.valueOf(rs.getString("payment_method")));
+
+                orders.add(restaurantOrder);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        for (RestaurantOrder restaurantOrder : orders) {
+            restaurantOrder.setItems(findOrderItemsByOrderId(restaurantOrder.getOrderId()));
+        }
+
+        return orders;
+    }
+
+    public static List<OrderItem> findOrderItemsByOrderId(long id) {
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        String ordersItemsQuery = """
+                    SELECT order_item.*, food_item.food_item_name as food_item_name
+                    FROM order_items order_item
+                    JOIN menus food_item
+                        ON order_item.food_item_id = food_item.food_item_id
+                    WHERE order_item.order_id = ?
+                """;
+
+
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(ordersItemsQuery)) {
+            pstmt.setLong(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                OrderItem orderItem = new OrderItem(
+                        rs.getLong("order_item_id"),
+                        rs.getString("food_item_name"),
+                        rs.getLong("food_item_id"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price")
+                );
+
+                orderItems.add(orderItem);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orderItems;
+    }
+
 }

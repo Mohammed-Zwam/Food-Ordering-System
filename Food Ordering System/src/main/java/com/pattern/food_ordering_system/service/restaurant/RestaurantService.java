@@ -9,15 +9,20 @@ import com.pattern.food_ordering_system.repository.RestaurantRepo;
 import com.pattern.food_ordering_system.utils.AlertHandler;
 
 public class RestaurantService {
-    private static Restaurant restaurant = (Restaurant) UserFactory.getUser();
+    private static final Restaurant restaurant = (Restaurant) UserFactory.getUser();
 
-    public static void setRestaurantInfo () {
+    public static void setRestaurantInfo() {
         getRestaurantMenu();
+        getRestaurantOrders();
         restaurant.setAVG_RATE(RestaurantRepo.findAvgRateByRestaurantId(restaurant.getId()));
     }
 
     public static void getRestaurantMenu() {
         restaurant.setMenu(RestaurantRepo.getMenuByRestaurantId(restaurant.getId()));
+    }
+
+    public static void getRestaurantOrders() {
+        restaurant.setOrders(RestaurantRepo.findOrdersByRestaurantId(restaurant.getId()));
     }
 
     public static void addFoodItem(String category, MenuItem foodItem) {
@@ -29,7 +34,7 @@ public class RestaurantService {
     }
 
     public static void deleteFoodItemById(MenuItem menuItem) throws RuntimeException {
-        boolean success =  RestaurantRepo.deleteFoodItem(menuItem.getId());
+        boolean success = RestaurantRepo.deleteFoodItem(menuItem.getId());
         if (success) {
             AlertHandler.showInfo("Operation Completed", "Item deleted successfully.");
             restaurant.getMenu().remove(menuItem);

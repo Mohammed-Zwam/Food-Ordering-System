@@ -1,7 +1,9 @@
 package com.pattern.food_ordering_system.controller.customer;
 
-import com.pattern.food_ordering_system.model.customer.CartItem;
+import com.pattern.food_ordering_system.entity.CartItem;
 import com.pattern.food_ordering_system.entity.Order;
+import com.pattern.food_ordering_system.entity.OrderItem;
+import com.pattern.food_ordering_system.model.customer.CustomerOrder;
 import com.pattern.food_ordering_system.model.customer.OrderStatus;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -15,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -38,9 +39,9 @@ public class OrderCardController {
     private Button rateBtn;
 
 
-    private Order order;
+    private CustomerOrder order;
 
-    public void setOrderData(Order order) {
+    public void setOrderData(CustomerOrder order) {
         this.order = order;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd • hh:mm a", Locale.ENGLISH);
         lblDate.setText(order.getOrderTime().format(formatter));
@@ -64,7 +65,7 @@ public class OrderCardController {
     }
 
 
-    private void setupItemsTooltip(Collection<CartItem> items) {
+    private void setupItemsTooltip(List<OrderItem> items) {
         Tooltip tooltip = new Tooltip();
         tooltip.setShowDelay(Duration.millis(100));
         tooltip.setHideDelay(Duration.millis(200));
@@ -76,7 +77,7 @@ public class OrderCardController {
         lblItemsCount.setStyle("-fx-cursor: hand; -fx-underline: true; -fx-text-fill: #1E88E5;");
     }
 
-    private VBox createTooltipContent(Collection<CartItem> items) {
+    private VBox createTooltipContent(List<OrderItem> items) {
         VBox container = new VBox(8);
         container.setStyle("-fx-background-color: white; -fx-background-radius: 8; " +
                 "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 2); " +
@@ -86,34 +87,13 @@ public class OrderCardController {
         header.setStyle("-fx-font-weight: bold; -fx-font-size: 12; -fx-text-fill: #1E88E5;");
         container.getChildren().add(header);
 
-        for (CartItem item : items) {
-            HBox row = new HBox(10);
-            row.setAlignment(Pos.CENTER_LEFT);
-
-            ImageView img = new ImageView();
-            img.setFitWidth(30);
-            img.setFitHeight(30);
-            try {
-                img.setImage(new Image(item.getFoodItem().getImagePath()));
-                Rectangle clip = new Rectangle(30, 30);
-                clip.setArcWidth(8);
-                clip.setArcHeight(8);
-                img.setClip(clip);
-            } catch (Exception e) {
-
-            }
-
-            Label nameQty = new Label(item.getQuantity() + "x " + item.getFoodItem().getName());
+        for (OrderItem item : items) {
+            Label nameQty = new Label(item.getQuantity() + "x " + item.getFoodItemName());
             nameQty.setStyle("-fx-font-size: 11; -fx-text-fill: #333;");
             nameQty.setPrefWidth(120);
             nameQty.setWrapText(true);
 
-            double totalItemPrice = item.getQuantity() * item.getFoodItem().getPrice();
-            Label price = new Label(String.format("%.0f EGP", totalItemPrice));
-            price.setStyle("-fx-font-weight: bold; -fx-font-size: 11; -fx-text-fill: #4CAF50;");
-
-            row.getChildren().addAll(img, nameQty, price);
-            container.getChildren().add(row);
+            container.getChildren().add(nameQty);
         }
 
         return container;

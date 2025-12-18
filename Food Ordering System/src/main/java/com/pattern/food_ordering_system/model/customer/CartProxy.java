@@ -1,5 +1,6 @@
 package com.pattern.food_ordering_system.model.customer;
 
+import com.pattern.food_ordering_system.entity.CartItem;
 import com.pattern.food_ordering_system.utils.exception.InvalidQuantityException;
 import com.pattern.food_ordering_system.utils.exception.RestaurantMismatchException;
 

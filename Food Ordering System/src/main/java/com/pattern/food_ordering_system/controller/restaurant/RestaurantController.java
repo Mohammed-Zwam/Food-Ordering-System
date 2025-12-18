@@ -171,4 +171,10 @@ public class RestaurantController implements Initializable {
         categoriesContainer.setVisible(!isEmpty);
         categoriesContainer.setManaged(!isEmpty);
     }
+
+    @FXML
+    private void navigateToOrders(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        ViewHandler.changeView(stage, "restaurant-views/restaurant-orders-view");
+    }
 }
