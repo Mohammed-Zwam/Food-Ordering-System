@@ -1,7 +1,6 @@
 package com.pattern.food_ordering_system.controller.customer;
 
 import com.pattern.food_ordering_system.entity.CartItem;
-import com.pattern.food_ordering_system.model.customer.CustomerOrder;
 import com.pattern.food_ordering_system.model.customer.FoodItem;
 import com.pattern.food_ordering_system.model.restaurant.Menu;
 import com.pattern.food_ordering_system.model.restaurant.MenuComponent;
@@ -11,7 +10,6 @@ import com.pattern.food_ordering_system.repository.CustomerRepo;
 import com.pattern.food_ordering_system.utils.AlertHandler;
 import com.pattern.food_ordering_system.utils.InputParser;
 import com.pattern.food_ordering_system.utils.ViewHandler;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -39,7 +37,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
-    private final Customer customer = (Customer) UserFactory.getUser();
     @FXML
     Label totalPrice;
     @FXML
@@ -54,38 +51,28 @@ public class CustomerController implements Initializable {
     private TextField txtSearch;
     @FXML
     private ComboBox<String> cmbRating, cmbLocation;
+
     @FXML
     private VBox cartInfoContainer, emptyCartMessageContainer;
+
     @FXML
     private Button refreshBtn;
+
     private Menu menu;
     private List<FoodItem> allItems;
 
+    private final Customer customer = (Customer) UserFactory.getUser();
+
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        FoodCardController.setParentController(this);
-        CartCardController.setParentController(this);
-
+        loadMenuDataForCustomer();
+        setupRatingFilter();
+        setupLocationFilter();
         setCustomerInfo();
         loadCartMenu();
-
-        Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() {
-                loadMenuDataForCustomer();
-                return null;
-            }
-        };
-
-        task.setOnSucceeded(event -> {
-            displayItems(allItems);
-            setupRatingFilter();
-            setupLocationFilter();
-        });
-
-        new Thread(task).start();
+        FoodCardController.setParentController(this);
+        CartCardController.setParentController(this);
     }
-
 
     private void setCustomerInfo() {
         userName.setText(customer.getUserName());
@@ -100,6 +87,7 @@ public class CustomerController implements Initializable {
     private void loadMenuDataForCustomer() {
         menu = CustomerRepo.findAllFoodItems();
         allItems = extractAllItems(menu);
+        displayItems(allItems);
     }
 
     private List<FoodItem> extractAllItems(Menu menu) {

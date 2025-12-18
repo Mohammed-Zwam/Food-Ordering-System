@@ -14,6 +14,7 @@ import java.util.Map;
 public class ViewHandler {
     private static Scene mainScene;
     private static Map<String, ViewCacheEntry> cache = new HashMap<>();
+    private static String previousFXMLFile = "";
 
     public static void changeView(Stage stage, String fxmlFile) {
 
@@ -35,12 +36,20 @@ public class ViewHandler {
             } else {
                 mainScene.setRoot(entry.root);
             }
-            if (isOld && entry.controller instanceof Initializable) {
+
+            if (isOld && entry.controller instanceof Initializable && notSameDashboard(previousFXMLFile, fxmlFile)) {
                 ((Initializable) entry.controller).initialize(null, null);
             }
+            previousFXMLFile = fxmlFile;
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean notSameDashboard(String currentFxml, String nextFxml) {
+        return !((currentFxml.startsWith("restaurant") && nextFxml.startsWith("restaurant")) ||
+                (currentFxml.startsWith("customer") && nextFxml.startsWith("customer")) ||
+                (currentFxml.startsWith("delivery") && nextFxml.startsWith("delivery")));
     }
 
     private static class ViewCacheEntry {

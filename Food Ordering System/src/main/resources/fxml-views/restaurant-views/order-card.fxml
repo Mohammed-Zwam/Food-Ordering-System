@@ -4,13 +4,18 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="orderCardRoot" prefHeight="347.0" prefWidth="368.0" spacing="12" style="-fx-padding: 20;-fx-background-color: #FFFFFF;-fx-border-color: #D0D8E8;-fx-border-radius: 12;-fx-background-radius: 12;-fx-effect: dropshadow(gaussian , rgba(0,0,0,0.1) , 4 , 0 , 0 , 2)" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pattern.food_ordering_system.controller.restaurant.OrderCardController">
+<VBox fx:id="orderCardRoot" prefHeight="384.0" prefWidth="471.0" spacing="12" style="-fx-padding: 20;-fx-background-color: #FFFFFF;-fx-border-color: #D0D8E8;-fx-border-radius: 12;-fx-background-radius: 12;-fx-effect: dropshadow(gaussian , rgba(0,0,0,0.1) , 4 , 0 , 0 , 2)" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pattern.food_ordering_system.controller.restaurant.OrderCardController">
 
 <!-- Header: Order ID and Status -->
     <HBox alignment="CENTER" spacing="15">
         <Label fx:id="orderId" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #1E88E5;" text="Order #1234" />
+      <Region prefHeight="30.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+      <Label fx:id="lblStatus" prefHeight="30.0" style="-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #FFF9C4; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;" text="Pending" />
+      <Label fx:id="lblStatus1" layoutX="261.0" layoutY="10.0" prefHeight="30.0" style="-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #E3F2FD; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;" text="Being Prepared" />
+      <Label fx:id="lblStatus2" layoutX="138.0" layoutY="10.0" prefHeight="30.0" style="-fx-text-fill: #2E7D32; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #E8F5E9; -fx-border-color: #B3FCC0; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;" text="Completed" />
     </HBox>
 
     <!-- Customer Info -->
@@ -32,14 +37,11 @@
         <Label style="-fx-font-size: 13;" text="- Coke x2" />
     </VBox>
 
-    <Separator />
-
     <!-- Footer: Time and Actions -->
     <HBox alignment="CENTER_RIGHT" spacing="20" VBox.vgrow="ALWAYS">
-        <HBox spacing="10">
+        <HBox alignment="BOTTOM_RIGHT" prefHeight="18.0" prefWidth="198.0" spacing="10">
             <Button fx:id="btnAccept" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12;" text="Confirm" />
             <Button fx:id="btnMarkReady" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12;" text="Out For Delivery" />
-            <Button fx:id="btnStartPreparing" style="-fx-background-color: #FFC107; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12;" text="Start Preparing" />
         </HBox>
     </HBox>
 
