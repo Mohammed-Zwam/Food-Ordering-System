@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LoginController  {
+public class LoginController {
     @FXML
     private TextField userName;
 
@@ -51,9 +51,10 @@ public class LoginController  {
 
         loginTask.setOnFailed(e -> {
             Throwable ex = loginTask.getException();
-            if (ex instanceof RuntimeException)
+            if (ex instanceof RuntimeException) {
                 AlertHandler.showWarning("Invalid Input", ex.getMessage());
-            else
+                ex.printStackTrace();
+            } else
                 AlertHandler.showError("Login Failed", ex.getMessage());
             isLoading(false);
         });
@@ -72,7 +73,7 @@ public class LoginController  {
     }
 
     public void isLoading(boolean isLoading) {
-        if(isLoading) {
+        if (isLoading) {
             loginBtn.setText("⌛ Loading ...");
         } else {
             loginBtn.setText("Login");

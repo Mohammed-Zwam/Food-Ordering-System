@@ -3,19 +3,26 @@ package com.pattern.food_ordering_system.controller.customer;
 import com.pattern.food_ordering_system.entity.Order;
 import com.pattern.food_ordering_system.model.user.Customer;
 import com.pattern.food_ordering_system.model.user.UserFactory;
+import com.pattern.food_ordering_system.service.customer.CustomerService;
+import com.pattern.food_ordering_system.service.user.UserService;
 import com.pattern.food_ordering_system.utils.ViewHandler;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class CustomerOrdersController implements Initializable {
@@ -24,16 +31,47 @@ public class CustomerOrdersController implements Initializable {
     @FXML
     private VBox ordersContainer;
 
+    @FXML
+    private Label userName;
+
+    @FXML
+    private ImageView profileImage;
+
+    @FXML
+    private Button refreshBtn;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadOrdersData();
+        Task<List<Order>> task = new Task<>() {
+            @Override
+            protected List<Order> call() throws Exception {
+                return customer.getOrders();
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            List<Order> orders = task.getValue();
+            renderOrders(orders);
+        });
+
+        setCustomerInfo();
+        new Thread(task).start();
     }
 
-    private void loadOrdersData() {
-        List<Order> dbOrders = customer.getOrders();
+    private void setCustomerInfo() {
+        userName.setText(customer.getUserName());
+        if (!(customer.getUserImgPath() == null || customer.getUserImgPath().equalsIgnoreCase("default"))) {
+            Image image = new Image(
+                    Objects.requireNonNull(getClass().getResourceAsStream(customer.getUserImgPath()))
+            );
+            profileImage.setImage(image);
+        }
+    }
+
+    private void renderOrders(List<Order> orders) {
         ordersContainer.getChildren().clear();
-        for (Order order : dbOrders) {
+        for (Order order : orders) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml-views/customer-views/order-card.fxml"));
                 VBox card = loader.load();
@@ -58,5 +96,27 @@ public class CustomerOrdersController implements Initializable {
     void logout(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         ViewHandler.changeView(stage, "registration-views/login-view");
+    }
+
+
+    @FXML
+    void refreshMenu() {
+        refreshBtn.setDisable(true);
+        refreshBtn.setText("⏳ Refreshing ...");
+
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                CustomerService.loadCustomerOrders();
+                return null;
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            initialize(null, null);
+            refreshBtn.setText("\uD83D\uDD04 Refresh");
+            refreshBtn.setDisable(false);
+        });
+        new Thread(task).start();
     }
 }

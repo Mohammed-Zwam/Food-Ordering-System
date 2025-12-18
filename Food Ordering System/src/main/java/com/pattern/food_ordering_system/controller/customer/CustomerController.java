@@ -10,6 +10,7 @@ import com.pattern.food_ordering_system.repository.CustomerRepo;
 import com.pattern.food_ordering_system.utils.AlertHandler;
 import com.pattern.food_ordering_system.utils.InputParser;
 import com.pattern.food_ordering_system.utils.ViewHandler;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,9 +18,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -31,42 +34,31 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
     @FXML
-    private Label lblWelcome;
-
+    Label totalPrice;
+    @FXML
+    Label restaurantName;
+    @FXML
+    private Label userName, cartItemsCounter;
     @FXML
     private ImageView profileImage;
-
     @FXML
-    private FlowPane menuFlowPane;
-
-    @FXML
-    private FlowPane cartFlowPane;
-
+    private FlowPane menuFlowPane, cartFlowPane;
     @FXML
     private TextField txtSearch;
+    @FXML
+    private ComboBox<String> cmbRating, cmbLocation;
 
     @FXML
-    private ComboBox<String> cmbRating;
+    private VBox cartInfoContainer, emptyCartMessageContainer;
 
     @FXML
-    private ComboBox<String> cmbLocation;
+    private Button refreshBtn;
 
-    @FXML
-    private VBox cartInfoContainer;
-
-    @FXML
-    private VBox emptyCartMessageContainer;
-
-    @FXML
-    private Label cartItemsCounter;
-
-    @FXML Label totalPrice;
-
-    @FXML Label restaurantName;
 
     private Menu menu;
     private List<FoodItem> allItems;
@@ -78,9 +70,20 @@ public class CustomerController implements Initializable {
         loadMenuDataForCustomer();
         setupRatingFilter();
         setupLocationFilter();
+        setCustomerInfo();
         loadCartMenu();
         FoodCardController.setParentController(this);
         CartCardController.setParentController(this);
+    }
+
+    private void setCustomerInfo() {
+        userName.setText(customer.getUserName());
+        if (!(customer.getUserImgPath() == null || customer.getUserImgPath().equalsIgnoreCase("default"))) {
+            Image image = new Image(
+                    Objects.requireNonNull(getClass().getResourceAsStream(customer.getUserImgPath()))
+            );
+            profileImage.setImage(image);
+        }
     }
 
     private void loadMenuDataForCustomer() {
@@ -238,7 +241,7 @@ public class CustomerController implements Initializable {
         cartFlowPane.getChildren().clear();
 
         for (CartItem item : customer.getCart().getCartItems()) {
-            if(restaurantName == null) item.getFoodItem().getRestaurantName();
+            if (restaurantName == null) item.getFoodItem().getRestaurantName();
             try {
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/fxml-views/customer-views/cart-item-card.fxml")
@@ -266,6 +269,7 @@ public class CustomerController implements Initializable {
         emptyCartMessageContainer.setVisible(isEmpty);
         emptyCartMessageContainer.setManaged(isEmpty);
     }
+
     @FXML
     private void onCheckout() {
         if (customer.getCart().isEmpty()) {
@@ -293,6 +297,7 @@ public class CustomerController implements Initializable {
             e.printStackTrace();
         }
     }
+
     @FXML
     void navigateToOrdersView(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

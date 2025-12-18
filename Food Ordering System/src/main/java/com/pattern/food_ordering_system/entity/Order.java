@@ -1,6 +1,7 @@
 package com.pattern.food_ordering_system.entity;
 
 import com.pattern.food_ordering_system.model.customer.CartItem;
+import com.pattern.food_ordering_system.model.customer.OrderStatus;
 import com.pattern.food_ordering_system.model.customer.PaymentMethod;
 
 import java.time.LocalDateTime;
@@ -15,8 +16,9 @@ public class Order {
     private PaymentMethod paymentMethod;
     private String deliveryAddress;
     private LocalDateTime orderTime;
-    private String status;
+    private OrderStatus status;
     private String restaurantName;
+    private String restaurantLogo;
 
     public Order(long customerId, long restaurantId, Collection<CartItem> items,
                  double totalPrice, PaymentMethod paymentMethod, String deliveryAddress, String restaurantName) {
@@ -27,7 +29,7 @@ public class Order {
         this.paymentMethod = paymentMethod;
         this.deliveryAddress = deliveryAddress;
         this.orderTime = LocalDateTime.now();
-        this.status = "Pending";
+        this.status = OrderStatus.ORDER_PLACED;
         this.restaurantName = restaurantName;
     }
 
@@ -95,15 +97,23 @@ public class Order {
         this.orderTime = orderTime;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
     public String getRestaurantName() {
         return restaurantName;
+    }
+
+    public String getRestaurantLogo() {
+        return restaurantLogo;
+    }
+
+    public void setRestaurantLogo(String restaurantLogo) {
+        this.restaurantLogo = restaurantLogo;
     }
 
     public void setRestaurantName(String restaurantName) {

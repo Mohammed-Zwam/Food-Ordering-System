@@ -53,14 +53,7 @@ public class FoodCardController {
         try {
             if (imagePath.startsWith("http") || imagePath.startsWith("https")) {
                 imgFood.setImage(new Image(imagePath, true));
-            } else {
-                String localPath = "src/main/resources/users-images/" + imagePath;
-                File file = new File(localPath);
-                if (file.exists()) {
-                    imgFood.setImage(new Image(file.toURI().toString()));
-                }
             }
-
         } catch (Exception e) {
             System.out.println("Image load error for " + item.getName());
             e.printStackTrace();

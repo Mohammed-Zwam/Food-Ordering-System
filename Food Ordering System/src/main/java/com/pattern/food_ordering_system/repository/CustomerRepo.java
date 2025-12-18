@@ -1,11 +1,8 @@
 package com.pattern.food_ordering_system.repository;
 
 import com.pattern.food_ordering_system.config.DBConnection;
-import com.pattern.food_ordering_system.model.customer.Cart;
-import com.pattern.food_ordering_system.model.customer.CartItem;
-import com.pattern.food_ordering_system.model.customer.FoodItem;
+import com.pattern.food_ordering_system.model.customer.*;
 import com.pattern.food_ordering_system.entity.Order;
-import com.pattern.food_ordering_system.model.customer.PaymentMethod;
 import com.pattern.food_ordering_system.model.restaurant.Menu;
 
 import java.sql.*;
@@ -159,7 +156,7 @@ public class CustomerRepo {
             pstmt.setString(4, order.getPaymentMethod().name());
             pstmt.setString(5, order.getDeliveryAddress());
             pstmt.setTimestamp(6, Timestamp.valueOf(order.getOrderTime()));
-            pstmt.setString(7, order.getStatus());
+            pstmt.setString(7, order.getStatus().toString());
 
             pstmt.executeUpdate();
 
@@ -195,7 +192,7 @@ public class CustomerRepo {
         List<Order> orders = new ArrayList<>();
 
         String sql = """
-                    SELECT o.*, u.username as restaurant_name 
+                    SELECT o.*, u.username as restaurant_name, u.image_path as restaurant_logo
                     FROM orders o
                     LEFT JOIN users u ON o.restaurant_id = u.user_id
                     WHERE o.customer_id = ?
@@ -222,9 +219,9 @@ public class CustomerRepo {
                         rs.getString("delivery_address"),
                         rs.getString("restaurant_name")
                 );
-
+                order.setRestaurantLogo(rs.getString("restaurant_logo"));
                 order.setOrderId(rs.getLong("order_id"));
-                order.setStatus(rs.getString("status"));
+                order.setStatus(OrderStatus.valueOf(rs.getString("status")));
 
                 if (rs.getTimestamp("order_time") != null) {
                     order.setOrderTime(rs.getTimestamp("order_time").toLocalDateTime());

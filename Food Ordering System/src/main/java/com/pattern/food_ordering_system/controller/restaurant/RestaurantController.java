@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 
@@ -53,7 +54,7 @@ public class RestaurantController implements Initializable {
         lblWelcome.setText(restaurant.getUserName());
         if (!(restaurant.getUserImgPath().equals("default"))) {
             try {
-                Image imageFile = new Image(RestaurantController.class.getResourceAsStream(restaurant.getUserImgPath()));
+                Image imageFile = new Image(Objects.requireNonNull(RestaurantController.class.getResourceAsStream(restaurant.getUserImgPath())));
                 profileImage.setImage(imageFile);
             } catch (Exception e) {
                 System.out.println(e.getMessage());

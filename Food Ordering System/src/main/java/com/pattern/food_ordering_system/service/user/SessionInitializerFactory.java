@@ -2,6 +2,7 @@ package com.pattern.food_ordering_system.service.user;
 
 import com.pattern.food_ordering_system.model.user.Role;
 
+/*== DP >> Factory Pattern ==*/
 public class SessionInitializerFactory {
     public static UserSessionInitializer getUserSession(Role role) {
         return switch (role) {
