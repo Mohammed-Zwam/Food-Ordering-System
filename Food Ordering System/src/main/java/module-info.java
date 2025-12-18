@@ -10,6 +10,7 @@ module com.example.food_ordering_system {
     requires java.desktop;
     requires javafx.swing;
     requires javafx.base;
+    requires org.json;
     opens com.pattern.food_ordering_system.entity to javafx.base;
     opens com.pattern.food_ordering_system to javafx.fxml;
     exports com.pattern.food_ordering_system;

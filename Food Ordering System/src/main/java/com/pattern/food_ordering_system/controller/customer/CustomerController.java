@@ -8,6 +8,7 @@ import com.pattern.food_ordering_system.model.restaurant.MenuComponent;
 import com.pattern.food_ordering_system.model.user.Customer;
 import com.pattern.food_ordering_system.model.user.UserFactory;
 import com.pattern.food_ordering_system.repository.CustomerRepo;
+import com.pattern.food_ordering_system.service.user.DeliveryTimeService;
 import com.pattern.food_ordering_system.utils.AlertHandler;
 import com.pattern.food_ordering_system.utils.InputParser;
 import com.pattern.food_ordering_system.utils.ViewHandler;
@@ -33,13 +34,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class CustomerController implements Initializable {
     private final Customer customer = (Customer) UserFactory.getUser();
+    private final Map<Long, Double> deliveryTimeCache = new HashMap<>();
     @FXML
     Label totalPrice;
     @FXML
@@ -60,19 +59,21 @@ public class CustomerController implements Initializable {
     private Button refreshBtn;
     private Menu menu;
     private List<FoodItem> allItems;
-
+    @FXML
+    private ComboBox<String> cmbDeliveryTime;
     public void initialize(URL location, ResourceBundle resources) {
-
+      System.out.println(" Customer Zone = " + customer.getZone());
         FoodCardController.setParentController(this);
         CartCardController.setParentController(this);
 
         setCustomerInfo();
         loadCartMenu();
-
+        setupDeliveryTimeFilter();
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
                 loadMenuDataForCustomer();
+                calculateDeliveryTimesOnce();
                 return null;
             }
         };
@@ -312,6 +313,65 @@ public class CustomerController implements Initializable {
     void navigateToOrdersView(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         ViewHandler.changeView(stage, "customer-views/customer-orders-view");
+    }
+    @FXML
+    private void onDeliveryTimeFilter() {
+        String selected = cmbDeliveryTime.getValue();
+        if (selected == null || selected.equals("All")) {
+            displayItems(allItems);
+            return;
+        }
+
+        double maxTime = switch (selected) {
+            case "≤ 10 min" -> 10;
+            case "≤ 15 min" -> 15;
+            case "≤ 30 min" -> 30;
+            case "≤ 45 min" -> 45;
+            case "≤ 60 min" -> 60;
+            default -> Double.MAX_VALUE;
+        };
+
+        List<FoodItem> filtered = new ArrayList<>();
+
+        for (FoodItem item : allItems) {
+            double time = deliveryTimeCache.get(item.getId());
+            if (selected.equals("> 60 min")) {
+                if (time > 60) filtered.add(item);
+            } else {
+                if (time <= maxTime) filtered.add(item);
+            }
+        }
+
+        displayItems(filtered);
+    }
+    private void calculateDeliveryTimesOnce() {
+        String customerZone = customer.getZone();
+
+        for (FoodItem item : allItems) {
+            String restaurantZone = item.getLocation();
+
+            double time = DeliveryTimeService.getDeliveryTimeInMinutes(
+                    customerZone,
+                    restaurantZone
+            );
+
+            deliveryTimeCache.put(item.getId(), time);
+        }
+
+
+    }
+    private void setupDeliveryTimeFilter() {
+        cmbDeliveryTime.getItems().clear();
+        cmbDeliveryTime.getItems().addAll(
+                "All",
+                "≤ 10 min",
+                "≤ 15 min",
+                "≤ 30 min",
+                "≤ 45 min",
+                "≤ 60 min",
+                "> 60 min"
+        );
+        cmbDeliveryTime.setValue("All");
     }
 
 }

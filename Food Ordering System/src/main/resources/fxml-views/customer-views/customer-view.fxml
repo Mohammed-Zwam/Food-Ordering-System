@@ -73,7 +73,10 @@
 
                         <Region HBox.hgrow="ALWAYS"/>
                         <HBox alignment="CENTER" prefHeight="38.0" prefWidth="486.0" spacing="20.0">
-                            <ComboBox prefWidth="150.0" promptText="⏱ Delivery Time"/>
+                            <ComboBox fx:id="cmbDeliveryTime"
+                                      promptText="Delivery Time"
+                                      onAction="#onDeliveryTimeFilter"
+                                      prefWidth="150"/>
                             <ComboBox fx:id="cmbRating" onAction="#onRatingFilter" prefWidth="150.0"
                                       promptText="⭐ Rating"/>
                             <ComboBox fx:id="cmbLocation" onAction="#onLocationFilter" prefWidth="150.0"
