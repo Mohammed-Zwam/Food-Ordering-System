@@ -52,13 +52,17 @@ public class RestaurantController implements Initializable {
     }
 
     public void setRestaurantInfo() {
-        lblWelcome.setText(restaurant.getUserName());
-        if (!(restaurant.getUserImgPath().equals("default"))) {
+        lblWelcome.setText("Welcome, " + restaurant.getUserName());
+        String imgPath = restaurant.getUserImgPath();
+
+        if (imgPath != null && !imgPath.isEmpty() && !imgPath.equalsIgnoreCase("default")) {
             try {
-                Image imageFile = new Image(Objects.requireNonNull(RestaurantController.class.getResourceAsStream(restaurant.getUserImgPath())));
-                profileImage.setImage(imageFile);
+                var imageStream = getClass().getResourceAsStream(imgPath);
+                if (imageStream != null) {
+                    Image image = new Image(imageStream);
+                }
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error loading profile image: " + e.getMessage());
             }
         }
     }

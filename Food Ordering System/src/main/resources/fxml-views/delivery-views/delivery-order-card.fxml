@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefWidth="750.0" spacing="10.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-border-color: #D0D8E8; -fx-border-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-padding: 15;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pattern.food_ordering_system.controller.delivery.DeliveryOrderCardController">
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
+            <Label fx:id="lblOrderId" style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #1E88E5;" text="Order #123" />
+            <Separator orientation="VERTICAL" />
+            <Label fx:id="lblDeliveryFee" style="-fx-text-fill: #E65100; -fx-font-weight: bold;" text="🛵 Fee: 20 EGP" />
+        </HBox>
+
+        <Separator />
+
+        <HBox spacing="20.0" alignment="CENTER_LEFT">
+            <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                <Label style="-fx-text-fill: #778DA9; -fx-font-size: 11px;" text="PICKUP FROM" />
+                <Label fx:id="lblRestaurantName" style="-fx-font-weight: bold; -fx-text-fill: #0D1B2A; -fx-font-size: 14;" text="Burger King" />
+                <Label style="-fx-text-fill: #415A77; -fx-font-size: 12;" text="📍 Restaurant Location" wrapText="true" />
+            </VBox>
+
+            <Label style="-fx-font-size: 20; -fx-text-fill: #D0D8E8;" text="➔" />
+
+            <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                <Label style="-fx-text-fill: #778DA9; -fx-font-size: 11px;" text="DELIVER TO" />
+                <Label fx:id="lblCustomerName" style="-fx-font-weight: bold; -fx-text-fill: #0D1B2A; -fx-font-size: 14;" text="Ahmed Mohamed" />
+                <Label fx:id="lblAddress" style="-fx-text-fill: #415A77; -fx-font-size: 12;" text="📍 123 St, Cairo" wrapText="true" />
+            </VBox>
+        </HBox>
+
+        <Separator />
+
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
+            <VBox spacing="2">
+                <Label style="-fx-text-fill: #778DA9; -fx-font-size: 10;" text="TOTAL AMOUNT" />
+                <Label fx:id="lblPrice" style="-fx-text-fill: #4CAF50; -fx-font-weight: bold; -fx-font-size: 16;" text="150.00 EGP" />
+            </VBox>
+
+            <Label fx:id="lblPaymentMethod" style="-fx-background-color: #E9EEF6; -fx-text-fill: #415A77; -fx-padding: 5 10; -fx-background-radius: 15; -fx-font-size: 12;" text="💳 Credit Card" />
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Button fx:id="btnAction" prefHeight="40.0" prefWidth="160.0" text="Action" />
+        </HBox>
+    </children>
+</VBox>

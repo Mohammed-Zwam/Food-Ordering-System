@@ -16,4 +16,5 @@ module com.example.food_ordering_system {
     opens com.pattern.food_ordering_system.controller.restaurant to javafx.fxml;
     opens com.pattern.food_ordering_system.controller.registration to javafx.fxml;
     opens com.pattern.food_ordering_system.controller.customer to javafx.fxml;
+    opens com.pattern.food_ordering_system.controller.delivery to javafx.fxml;
 }

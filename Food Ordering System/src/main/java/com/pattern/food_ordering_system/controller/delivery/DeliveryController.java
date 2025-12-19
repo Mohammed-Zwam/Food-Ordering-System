@@ -1,37 +1,128 @@
 package com.pattern.food_ordering_system.controller.delivery;
 
+import com.pattern.food_ordering_system.model.customer.CustomerOrder;
+import com.pattern.food_ordering_system.model.user.Delivery;
+import com.pattern.food_ordering_system.model.user.UserFactory;
+import com.pattern.food_ordering_system.service.delivery.DeliveryService;
 import com.pattern.food_ordering_system.utils.ViewHandler;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class DeliveryController{
+public class DeliveryController implements Initializable {
+    private final Delivery driver = (Delivery) UserFactory.getUser();
+
     @FXML
     private Label lblWelcome;
     @FXML
     private VBox categoriesContainer;
     @FXML
     private ImageView profileImage;
+    @FXML
+    private Button refreshBtn;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setDriverInfo();
+        loadOrdersTask();
+    }
 
 
+    private void loadOrdersTask() {
+        if (refreshBtn != null) refreshBtn.setDisable(true);
 
+        Task<List<CustomerOrder>> task = new Task<>() {
+            @Override
+            protected List<CustomerOrder> call() throws Exception {
+                DeliveryService.loadPendingOrders();
+                return driver.getAssignedOrders();
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            renderOrders(task.getValue());
+            if (refreshBtn != null) refreshBtn.setDisable(false);
+        });
+
+        task.setOnFailed(event -> {
+            if (refreshBtn != null) refreshBtn.setDisable(false);
+            task.getException().printStackTrace();
+        });
+
+        new Thread(task).start();
+    }
+
+
+    private void renderOrders(List<CustomerOrder> orders) {
+        categoriesContainer.getChildren().clear();
+
+        if (orders == null || orders.isEmpty()) {
+            Label emptyLabel = new Label("No orders available right now.");
+            emptyLabel.setStyle("-fx-text-fill: #778DA9; -fx-font-size: 16px;");
+            categoriesContainer.getChildren().add(emptyLabel);
+            return;
+        }
+
+        for (CustomerOrder order : orders) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml-views/delivery-views/delivery-order-card.fxml"));
+                VBox card = loader.load();
+
+
+                DeliveryOrderCardController cardController = loader.getController();
+                cardController.setOrderData(order, this);
+
+                categoriesContainer.getChildren().add(card);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void setDriverInfo() {
+        lblWelcome.setText("Welcome, " + driver.getUserName());
+        if (!(driver.getUserImgPath() == null || driver.getUserImgPath().equalsIgnoreCase("default"))) {
+            try {
+                Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(driver.getUserImgPath())));
+                profileImage.setImage(image);
+            } catch (Exception e) {
+                System.out.println("Error loading profile image: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void refreshOrders() {
+        loadOrdersTask();
+    }
 
     public void expandAll() {
         for (Node node : categoriesContainer.getChildren()) {
-            TitledPane fp = (TitledPane) node;
-            fp.setExpanded(true);
+            if (node instanceof TitledPane) {
+                ((TitledPane) node).setExpanded(true);
+            }
         }
     }
 
     public void collapseAll() {
         for (Node node : categoriesContainer.getChildren()) {
-            TitledPane fp = (TitledPane) node;
-            fp.setExpanded(false);
+            if (node instanceof TitledPane) {
+                ((TitledPane) node).setExpanded(false);
+            }
         }
     }
 
@@ -40,4 +131,5 @@ public class DeliveryController{
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         ViewHandler.changeView(stage, "registration-views/login-view");
     }
+
 }

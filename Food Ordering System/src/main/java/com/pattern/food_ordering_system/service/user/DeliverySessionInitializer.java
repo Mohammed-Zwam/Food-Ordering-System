@@ -1,5 +1,5 @@
 package com.pattern.food_ordering_system.service.user;
-
+import com.pattern.food_ordering_system.service.delivery.DeliveryService;
 public class DeliverySessionInitializer implements UserSessionInitializer{
     @Override
     public String getTargetScene() {
@@ -8,6 +8,6 @@ public class DeliverySessionInitializer implements UserSessionInitializer{
 
     @Override
     public void loadUserData() {
-        // "NOT IMPLEMENTED";
+        DeliveryService.loadPendingOrders();
     }
 }
