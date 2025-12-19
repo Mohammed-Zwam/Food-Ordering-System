@@ -9,6 +9,7 @@ import com.pattern.food_ordering_system.repository.CustomerRepo;
 import com.pattern.food_ordering_system.utils.exception.CartException;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +66,8 @@ public class CustomerService {
             order.setRestaurantName(cart.getRestaurantName());
             order.setOrderPrice(cart.getTotalPrice());
             order.setTotalPriceWithFee(totalPriceWithFee);
+            order.setOrderTime(LocalDateTime.now());
+            order.setStatus(OrderStatus.ORDER_PLACED);
 
             CustomerRepo.insertOrder(order);
             List<CustomerOrder> orderList = customer.getOrders();

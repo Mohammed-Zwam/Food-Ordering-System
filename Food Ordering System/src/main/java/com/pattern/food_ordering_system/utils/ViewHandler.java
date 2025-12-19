@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/*== DP >> Flyweight Pattern ==*/
+/*== DP >> Flyweight Pattern OR Proxy ==*/
 public class ViewHandler {
     private static Scene mainScene;
     private static Map<String, ViewCacheEntry> cache = new HashMap<>();

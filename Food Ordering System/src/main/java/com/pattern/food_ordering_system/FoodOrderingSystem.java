@@ -19,6 +19,7 @@ public class FoodOrderingSystem extends Application {
 
         // GET STARTING (Login Page)
         ViewHandler.changeView(stage, "registration-views/login-view");
+
         stage.setTitle("Talabat");
         stage.show();
     }

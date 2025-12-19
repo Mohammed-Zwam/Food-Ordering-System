@@ -14,7 +14,9 @@ public class CartProxy implements ICart {
     @Override
     public int updateCartItem(FoodItem foodItem, int change) {
         if (cart.isEmpty() || foodItem.getRestaurantId() == cart.getRestaurantId()) {
+
             CartItem cartItem = cart.getCartItemById(foodItem.getId());
+
             if (cartItem == null || (cartItem.getQuantity() + change >= 0 && cartItem.getQuantity() + change <= 5)) {
                 return cart.updateCartItem(foodItem, change);
             } else {

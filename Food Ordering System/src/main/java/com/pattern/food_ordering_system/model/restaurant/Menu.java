@@ -7,6 +7,7 @@ import com.pattern.food_ordering_system.model.user.UserFactory;
 import java.util.ArrayList;
 
 public class Menu implements MenuComponent {
+    
     private String categoryName;
     private ArrayList<MenuComponent> menuComponents;
 
@@ -18,7 +19,6 @@ public class Menu implements MenuComponent {
         this.menuComponents = new ArrayList<>();
         this.categoryName = categoryName;
     }
-
 
     public void remove(MenuComponent menuComponent) {
         menuComponents.remove(menuComponent);

@@ -88,7 +88,6 @@ public class SignupController {
 
     @FXML
     private void handleSignup(MouseEvent event) {
-
         try {
             InputValidator.isEmptyOrNull(userName);
             InputValidator.isEmptyOrNull(phoneNumber);

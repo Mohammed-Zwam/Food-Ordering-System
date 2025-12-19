@@ -42,6 +42,7 @@ public class RestaurantController implements Initializable {
 
     @FXML
     private ImageView profileImage;
+
     private Restaurant restaurant = (Restaurant) UserFactory.getUser();
 
     @Override

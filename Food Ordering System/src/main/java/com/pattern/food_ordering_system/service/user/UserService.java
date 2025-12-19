@@ -9,12 +9,13 @@ import javafx.scene.image.ImageView;
 public class UserService {
     public static String login(String username, String password) {
         User user = UserRepo.findUserByUsername(username);
+        
         if (user != null && user.getPassword().equals(password)) {
-
             UserSessionInitializer userSession = SessionInitializerFactory.getUserSession(user.getRole());
             userSession.loadUserData();
             return userSession.getTargetScene();
         }
+
         else {
             throw new RuntimeException("Username or Password is incorrect!");
         }
@@ -22,6 +23,7 @@ public class UserService {
 
     public static String signup(String username, String password, String zone, String role, String phoneNumber, ImageView logoPreview) {
         User user = UserRepo.findUserByUsername(username);
+
         if (user != null) return "This username is already taken. Please choose another one !";
         else {
             Image image = logoPreview.getImage();

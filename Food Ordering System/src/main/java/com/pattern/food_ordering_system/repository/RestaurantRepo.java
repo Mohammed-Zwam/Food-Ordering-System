@@ -57,11 +57,12 @@ public class RestaurantRepo {
     }
 
     public static Menu getMenuByRestaurantId(long restaurantId) {
-        Menu menu = new Menu("MAIN MENU");
+        Menu menu = new Menu("ROOT");
+
         HashMap<String, Menu> menuCategories = new HashMap<>();
+
         String sql = "SELECT food_item_id, food_item_name, category, price, description, food_item_image, availability FROM menus WHERE restaurant_id = ?";
         String category;
-
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -120,7 +121,7 @@ public class RestaurantRepo {
         }
     }
 
-    public static boolean updateFoodItem(MenuItem item) {
+    public static boolean updateFoodItem(String category, MenuItem item) {
         String sql = "UPDATE menus SET food_item_name = ?, description = ?, price = ?, availability = ?, food_item_image = ?, category = ? WHERE food_item_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -131,7 +132,7 @@ public class RestaurantRepo {
             stmt.setDouble(3, item.getPrice());
             stmt.setBoolean(4, item.isAvailable());
             stmt.setString(5, item.getImagePath());
-            stmt.setString(6, item.getParent().getName());
+            stmt.setString(6, category);
             stmt.setLong(7, item.getId());
 
             return stmt.executeUpdate() > 0;

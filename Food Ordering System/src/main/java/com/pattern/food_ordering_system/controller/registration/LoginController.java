@@ -80,5 +80,4 @@ public class LoginController {
         }
         loginBtn.setDisable(isLoading);
     }
-
 }

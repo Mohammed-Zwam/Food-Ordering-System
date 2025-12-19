@@ -2,6 +2,7 @@ package com.pattern.food_ordering_system.entity;
 
 import com.pattern.food_ordering_system.model.customer.OrderStatus;
 import com.pattern.food_ordering_system.model.customer.PaymentMethod;
+import com.pattern.food_ordering_system.model.status.Status;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +15,8 @@ public class Order {
     private String deliveryAddress;
     private LocalDateTime orderTime;
     private OrderStatus status;
+
+    private Status orderStatus;
 
 
     public long getOrderId() {
@@ -68,7 +71,20 @@ public class Order {
         this.orderTime = orderTime;
     }
 
+
     public void setDeliveryAddress(String deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
+    }
+
+    public Status getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void nextOrderStatus() {
+        orderStatus.nextStatus(this.orderStatus);
+    }
+
+    public void setOrderStatus(Status orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }

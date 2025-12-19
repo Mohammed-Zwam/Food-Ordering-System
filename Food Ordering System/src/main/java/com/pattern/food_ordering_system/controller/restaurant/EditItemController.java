@@ -95,7 +95,7 @@ public class EditItemController {
         item.setAvailable(chkAvailable.isSelected());
         item.setImagePath(InputParser.toString(imgUrl));
 
-        boolean success = RestaurantRepo.updateFoodItem(item);
+        boolean success = RestaurantRepo.updateFoodItem(cmbCategory.getValue(), item);
 
         if (success) {
             AlertHandler.showInfo("Operation Completed", "Item updated successfully.");
