@@ -9,9 +9,6 @@ public class CustomerOrder extends Order {
     private long restaurantId;
     private long customerId;
     private double totalPriceWithFee;
-    private String customerName;
-    private double deliveryFee;
-    private String restaurantAddress;
 
     public long getCustomerId() {
         return customerId;
@@ -55,25 +52,5 @@ public class CustomerOrder extends Order {
 
     public double getTotalPrice() {
         return totalPriceWithFee;
-    }
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-    public double getDeliveryFee() {
-        return deliveryFee;
-    }
-
-    public void setDeliveryFee(double deliveryFee) {
-        this.deliveryFee = deliveryFee;
-    }
-    public String getRestaurantAddress() {
-        return restaurantAddress;
-    }
-    public void setRestaurantAddress(String restaurantAddress) {
-        this.restaurantAddress = restaurantAddress;
     }
 }

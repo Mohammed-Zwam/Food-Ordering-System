@@ -1,6 +1,6 @@
 package com.pattern.food_ordering_system.controller.delivery;
 
-import com.pattern.food_ordering_system.model.customer.CustomerOrder;
+import com.pattern.food_ordering_system.model.delivery.DeliveryOrder;
 import com.pattern.food_ordering_system.model.user.Delivery;
 import com.pattern.food_ordering_system.model.user.UserFactory;
 import com.pattern.food_ordering_system.service.delivery.DeliveryService;
@@ -26,14 +26,10 @@ import java.util.ResourceBundle;
 public class DeliveryController implements Initializable {
     private final Delivery driver = (Delivery) UserFactory.getUser();
 
-    @FXML
-    private Label lblWelcome;
-    @FXML
-    private VBox categoriesContainer;
-    @FXML
-    private ImageView profileImage;
-    @FXML
-    private Button refreshBtn;
+    @FXML private Label lblWelcome;
+    @FXML private VBox categoriesContainer;
+    @FXML private ImageView profileImage;
+    @FXML private Button refreshBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -41,15 +37,13 @@ public class DeliveryController implements Initializable {
         loadOrdersTask();
     }
 
-
     private void loadOrdersTask() {
         if (refreshBtn != null) refreshBtn.setDisable(true);
 
-        Task<List<CustomerOrder>> task = new Task<>() {
+        Task<List<DeliveryOrder>> task = new Task<>() {
             @Override
-            protected List<CustomerOrder> call() throws Exception {
-                DeliveryService.loadPendingOrders();
-                return driver.getAssignedOrders();
+            protected List<DeliveryOrder> call() throws Exception {
+                return DeliveryService.getPendingOrders();
             }
         };
 
@@ -66,8 +60,7 @@ public class DeliveryController implements Initializable {
         new Thread(task).start();
     }
 
-
-    private void renderOrders(List<CustomerOrder> orders) {
+    private void renderOrders(List<DeliveryOrder> orders) {
         categoriesContainer.getChildren().clear();
 
         if (orders == null || orders.isEmpty()) {
@@ -77,11 +70,10 @@ public class DeliveryController implements Initializable {
             return;
         }
 
-        for (CustomerOrder order : orders) {
+        for (DeliveryOrder order : orders) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml-views/delivery-views/delivery-order-card.fxml"));
                 VBox card = loader.load();
-
 
                 DeliveryOrderCardController cardController = loader.getController();
                 cardController.setOrderData(order, this);
@@ -112,17 +104,13 @@ public class DeliveryController implements Initializable {
 
     public void expandAll() {
         for (Node node : categoriesContainer.getChildren()) {
-            if (node instanceof TitledPane) {
-                ((TitledPane) node).setExpanded(true);
-            }
+            if (node instanceof TitledPane) ((TitledPane) node).setExpanded(true);
         }
     }
 
     public void collapseAll() {
         for (Node node : categoriesContainer.getChildren()) {
-            if (node instanceof TitledPane) {
-                ((TitledPane) node).setExpanded(false);
-            }
+            if (node instanceof TitledPane) ((TitledPane) node).setExpanded(false);
         }
     }
 
@@ -131,5 +119,4 @@ public class DeliveryController implements Initializable {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         ViewHandler.changeView(stage, "registration-views/login-view");
     }
-
 }

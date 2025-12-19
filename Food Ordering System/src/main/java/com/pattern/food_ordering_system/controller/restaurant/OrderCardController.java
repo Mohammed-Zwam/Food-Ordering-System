@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -34,5 +35,10 @@ public class OrderCardController {
             nameQty.setStyle("-fx-font-size: 13;");
             itemsContainer.getChildren().add(nameQty);
         }
+    }
+
+
+    public void setOrderStatus() {
+        order.getOrderStatus();
     }
 }

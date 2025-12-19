@@ -22,7 +22,6 @@
             <VBox spacing="3.0" HBox.hgrow="ALWAYS">
                 <Label style="-fx-text-fill: #778DA9; -fx-font-size: 11px;" text="PICKUP FROM" />
                 <Label fx:id="lblRestaurantName" style="-fx-font-weight: bold; -fx-text-fill: #0D1B2A; -fx-font-size: 14;" text="Burger King" />
-                <Label style="-fx-text-fill: #415A77; -fx-font-size: 12;" text="📍 Restaurant Location" wrapText="true" />
             </VBox>
 
             <Label style="-fx-font-size: 20; -fx-text-fill: #D0D8E8;" text="➔" />

@@ -6,7 +6,7 @@ import com.pattern.food_ordering_system.model.customer.OrderStatus;
 public abstract class Status {
     OrderStatus status;
 
-    protected OrderStatus getCurrentStatus() {
+    public OrderStatus getCurrentStatus() {
         return status;
     }
 

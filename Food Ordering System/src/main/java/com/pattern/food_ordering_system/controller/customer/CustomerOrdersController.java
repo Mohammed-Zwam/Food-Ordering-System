@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -30,7 +31,9 @@ public class CustomerOrdersController implements Initializable {
 
     Customer customer = (Customer) UserFactory.getUser();
     @FXML
-    private VBox ordersContainer;
+    private VBox emptyOrdersMessage, ordersContainer;
+    @FXML
+    private ScrollPane ordersMainContainer;
 
     @FXML
     private Label userName;
@@ -55,7 +58,7 @@ public class CustomerOrdersController implements Initializable {
             List<CustomerOrder> orders = task.getValue();
             renderOrders(orders);
         });
-
+        isEmptyPage(customer.getOrders().isEmpty());
         setCustomerInfo();
         new Thread(task).start();
     }
@@ -99,6 +102,13 @@ public class CustomerOrdersController implements Initializable {
         ViewHandler.changeView(stage, "registration-views/login-view");
     }
 
+    private void isEmptyPage(boolean isEmpty) {
+        emptyOrdersMessage.setVisible(isEmpty);
+        emptyOrdersMessage.setManaged(isEmpty);
+
+        ordersMainContainer.setVisible(!isEmpty);
+        ordersMainContainer.setManaged(!isEmpty);
+    }
 
     @FXML
     void refreshMenu() {

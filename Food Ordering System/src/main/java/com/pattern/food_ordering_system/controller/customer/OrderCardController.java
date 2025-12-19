@@ -79,21 +79,31 @@ public class OrderCardController {
 
     private VBox createTooltipContent(List<OrderItem> items) {
         VBox container = new VBox(8);
+        container.setMaxHeight(200);
+
         container.setStyle("-fx-background-color: white; -fx-background-radius: 8; " +
                 "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 2); " +
-                "-fx-padding: 10; -fx-border-color: #E0E0E0; -fx-border-radius: 8;");
+                "-fx-padding: 10; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-height: 100px");
 
         Label header = new Label("Order Details");
         header.setStyle("-fx-font-weight: bold; -fx-font-size: 12; -fx-text-fill: #1E88E5;");
         container.getChildren().add(header);
 
         for (OrderItem item : items) {
+            HBox row = new HBox(10);
+            row.setAlignment(Pos.CENTER_LEFT);
+
             Label nameQty = new Label(item.getQuantity() + "x " + item.getFoodItemName());
             nameQty.setStyle("-fx-font-size: 11; -fx-text-fill: #333;");
             nameQty.setPrefWidth(120);
             nameQty.setWrapText(true);
 
-            container.getChildren().add(nameQty);
+            double totalItemPrice = item.getQuantity() * item.getPrice();
+            Label price = new Label(String.format("%.0f EGP", totalItemPrice));
+            price.setStyle("-fx-font-weight: bold; -fx-font-size: 11; -fx-text-fill: #4CAF50;");
+
+            row.getChildren().addAll(nameQty, price);
+            container.getChildren().add(row);
         }
 
         return container;

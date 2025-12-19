@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -36,6 +37,9 @@ public class RestaurantOrdersController implements Initializable {
     private VBox emptyOrdersMessage, ordersContainer;
     @FXML
     private ScrollPane ordersMainContainer;
+
+    @FXML
+    private Button refreshBtn;
 
 
     @Override
@@ -106,14 +110,32 @@ public class RestaurantOrdersController implements Initializable {
         emptyOrdersMessage.setVisible(isEmpty);
         emptyOrdersMessage.setManaged(isEmpty);
 
-        ordersContainer.setVisible(!isEmpty);
-        ordersContainer.setManaged(!isEmpty);
+        ordersMainContainer.setVisible(!isEmpty);
+        ordersMainContainer.setManaged(!isEmpty);
     }
 
-    public void refreshMenu() {
-        RestaurantService.getRestaurantOrders();
-        initialize(null, null);
+
+    @FXML
+    void refreshMenu() {
+        refreshBtn.setDisable(true);
+        refreshBtn.setText("⏳ Refreshing ...");
+
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                RestaurantService.getRestaurantOrders();
+                return null;
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            initialize(null, null);
+            refreshBtn.setText("\uD83D\uDD04 Refresh");
+            refreshBtn.setDisable(false);
+        });
+        new Thread(task).start();
     }
+
 
     @FXML
     private void logout(ActionEvent event) {

@@ -12,49 +12,95 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #F4F8FF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pattern.food_ordering_system.controller.delivery.DeliveryController">
-    <left>
-        <VBox prefWidth="220.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #D0D8E8; -fx-border-width: 0 1 0 0;">
-            <children>
-                <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 30 20;">
-                    <children>
-                        <ImageView fx:id="profileImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../../assets/user-icon-SYS.png" />
-                            </image>
-                        </ImageView>
-                        <Label fx:id="lblWelcome" style="-fx-font-weight: bold; -fx-text-fill: #0D1B2A; -fx-font-size: 16;" text="Welcome, Capt." />
-                    </children>
-                </VBox>
-                <Separator prefWidth="200.0" />
-                <VBox spacing="10.0" style="-fx-padding: 20;">
-                    <children>
-                        <Button alignment="BASELINE_LEFT" maxWidth="Infinity" style="-fx-background-color: #E9EEF6; -fx-text-fill: #1E88E5; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: #1E88E5; -fx-border-width: 0 0 0 4; -fx-padding: 12 20;" text="Available Orders" />
-                        <Button alignment="BASELINE_LEFT" maxWidth="Infinity" onAction="#logout" style="-fx-background-color: transparent; -fx-text-fill: #415A77; -fx-font-size: 14; -fx-cursor: hand; -fx-padding: 12 20;" text="Logout" />
-                    </children>
-                </VBox>
-            </children>
-        </VBox>
-    </left>
+<BorderPane style="-fx-background-color: #F4F8FF;" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.pattern.food_ordering_system.controller.delivery.DeliveryController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="70.0" spacing="20"
+              style="-fx-background-color: #FFFFFF; -fx-border-color: #D0D8E8; -fx-border-width: 0 0 1 0; -fx-padding: 5 20;">
+
+            <Label style="-fx-font-family: 'Pacifico'; -fx-font-size: 28px; -fx-text-fill: #1E88E5;"
+                   text="Delivery Dashboard"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox alignment="CENTER" prefHeight="67.0" spacing="10.0">
+                <children>
+                    <HBox alignment="CENTER" spacing="10.0"
+                          style="-fx-background-radius: 50; -fx-background-color: #E9EEF6; -fx-padding: 5 15;">
+                        <children>
+                            <ImageView fx:id="profileImage" fitHeight="50.0" fitWidth="50.0" preserveRatio="true">
+                                <image>
+                                    <Image url="@../../assets/user-icon-SYS.png"/>
+                                </image>
+                            </ImageView>
+
+                            <VBox alignment="CENTER_LEFT">
+                                <children>
+                                    <Label fx:id="lblWelcome"
+                                           style="-fx-font-family: 'Poppins'; -fx-font-size: 16px; -fx-text-fill: #415A77; -fx-font-weight: bold;"
+                                           text="Captain Name"/>
+                                    <Label style="-fx-font-family: 'Poppins'; -fx-font-size: 12px; -fx-text-fill: #777; -fx-font-weight: bold;"
+                                           text="Active Driver 🟢"/>
+                                </children>
+                            </VBox>
+                        </children>
+                    </HBox>
+                </children>
+            </HBox>
+        </HBox>
+    </top>
 
     <center>
-        <VBox spacing="25.0" style="-fx-padding: 30;">
-            <children>
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
+        <HBox spacing="20" style="-fx-padding: 20;">
+            <VBox spacing="10" HBox.hgrow="ALWAYS">
+
+                <HBox alignment="CENTER_LEFT" prefHeight="60.0">
                     <children>
-                        <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #0D1B2A;" text="Assigned Shipments" />
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Button onAction="#refreshOrders" style="-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 20;" text="🔄 Refresh" />
+                        <Label style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #0D1B2A;"
+                               text="Assigned Shipments"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <HBox alignment="CENTER" spacing="10.0">
+                            <children>
+                                <Button onAction="#refreshOrders" fx:id="refreshBtn"
+                                        style="-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 14; -fx-padding: 8 20;"
+                                        text="🔄 Refresh"/>
+                            </children>
+                        </HBox>
                     </children>
                 </HBox>
 
-                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                <Separator/>
+
+                <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
                     <content>
-                        <VBox fx:id="categoriesContainer" spacing="15.0" style="-fx-padding: 5;">
-                        </VBox>
+                        <VBox fx:id="categoriesContainer" alignment="TOP_CENTER" spacing="15.0" style="-fx-padding: 5;"/>
                     </content>
                 </ScrollPane>
-            </children>
-        </VBox>
+            </VBox>
+        </HBox>
     </center>
+
+    <left>
+        <VBox prefWidth="200.0" style="-fx-background-color: white; -fx-border-color: #D0D8E8; -fx-border-width: 0 1 0 0;" BorderPane.alignment="CENTER">
+            <VBox spacing="5.0" style="-fx-padding: 20 0;" VBox.vgrow="ALWAYS">
+
+                <Button alignment="BASELINE_LEFT" maxWidth="Infinity" prefHeight="44.0"
+                        style="-fx-background-color: #E3F2FD; -fx-text-fill: #1E88E5; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: #1E88E5; -fx-border-width: 0 0 0 4; -fx-padding: 12 20;"
+                        text="Available Orders"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+            <Separator/>
+
+            <HBox alignment="CENTER" style="-fx-padding: 15;">
+                <Button alignment="BASELINE_LEFT" onAction="#logout"
+                        style="-fx-background-color: white; -fx-text-fill: #E53935; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 16;"
+                        text="🚪 Logout"/>
+            </HBox>
+        </VBox>
+    </left>
+
 </BorderPane>

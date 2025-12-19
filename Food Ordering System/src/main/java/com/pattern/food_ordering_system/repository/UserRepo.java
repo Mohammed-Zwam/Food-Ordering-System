@@ -51,7 +51,6 @@ public class UserRepo {
                 ResultSet generatedKeys = ps.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     long newRestaurantId = generatedKeys.getLong(1);
-                    System.out.println("ID >>>>>>>>> " + newRestaurantId);
                     RestaurantRepo.addRestaurantIdToRestaurants(newRestaurantId);
                 }
             }

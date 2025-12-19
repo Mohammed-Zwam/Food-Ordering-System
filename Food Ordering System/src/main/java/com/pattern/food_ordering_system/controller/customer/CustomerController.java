@@ -7,6 +7,7 @@ import com.pattern.food_ordering_system.model.restaurant.MenuComponent;
 import com.pattern.food_ordering_system.model.user.Customer;
 import com.pattern.food_ordering_system.model.user.UserFactory;
 import com.pattern.food_ordering_system.repository.CustomerRepo;
+import com.pattern.food_ordering_system.service.customer.CustomerService;
 import com.pattern.food_ordering_system.utils.AlertHandler;
 import com.pattern.food_ordering_system.utils.InputParser;
 import com.pattern.food_ordering_system.utils.ViewHandler;
@@ -62,25 +63,21 @@ public class CustomerController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() {
-                loadMenuDataForCustomer();
-                return null;
-            }
-        };
-
-        task.setOnSucceeded(event -> {
-            displayItems(allItems);
-            setupRatingFilter();
-            setupLocationFilter();
-        });
-
+        loadMenuDataForCustomer();
+        renderItems(allItems);
         FoodCardController.setParentController(this);
         CartCardController.setParentController(this);
         setCustomerInfo();
         loadCartMenu();
-        new Thread(task).start();
+        // SET EVENTS HERE TO PREVENT MULTIPLE INVOKE WHEN SETUP ComboBox |  # ASHRAF ;)
+        cmbLocation.setOnAction(null);
+        cmbRating.setOnAction(null);
+
+        setupRatingFilter();
+        setupLocationFilter();
+
+        cmbLocation.setOnAction(this::onLocationFilter);
+        cmbRating.setOnAction(this::onRatingFilter);
     }
 
 
@@ -114,7 +111,8 @@ public class CustomerController implements Initializable {
         return items;
     }
 
-    private void displayItems(List<FoodItem> items) {
+    private void renderItems(List<FoodItem> items) {
+        System.out.println(">>>>>>>>>>>>>>>> :( :::::::::::::::::::::");
         menuFlowPane.getChildren().clear();
         for (FoodItem item : items) {
             try {
@@ -140,7 +138,7 @@ public class CustomerController implements Initializable {
         String keyword = InputParser.toString(txtSearch).toLowerCase().trim();
 
         if (keyword.isEmpty()) {
-            displayItems(allItems);
+            renderItems(allItems);
             return;
         }
 
@@ -155,7 +153,7 @@ public class CustomerController implements Initializable {
             if (match) filtered.add(item);
         }
 
-        displayItems(filtered);
+        renderItems(filtered);
     }
 
     @FXML
@@ -180,12 +178,12 @@ public class CustomerController implements Initializable {
     }
 
     @FXML
-    private void onRatingFilter() {
+    private void onRatingFilter(ActionEvent event) {
         String selected = cmbRating.getValue();
         if (selected == null) return;
 
         if (selected.equals("All Ratings")) {
-            displayItems(allItems);
+            renderItems(allItems);
             return;
         }
 
@@ -198,7 +196,7 @@ public class CustomerController implements Initializable {
             }
         }
 
-        displayItems(filtered);
+        renderItems(filtered);
     }
 
     private void setupLocationFilter() {
@@ -218,12 +216,12 @@ public class CustomerController implements Initializable {
     }
 
     @FXML
-    private void onLocationFilter() {
+    private void onLocationFilter(ActionEvent event) {
         String selected = cmbLocation.getValue();
         if (selected == null) return;
 
         if (selected.equals("All Locations")) {
-            displayItems(allItems);
+            renderItems(allItems);
             return;
         }
 
@@ -234,12 +232,30 @@ public class CustomerController implements Initializable {
             }
         }
 
-        displayItems(filtered);
+        renderItems(filtered);
     }
 
 
-    public void refreshMenu() {
-        initialize(null, null);
+
+    @FXML
+    void refreshMenu() {
+        refreshBtn.setDisable(true);
+        refreshBtn.setText("⏳ Refreshing ...");
+
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                CustomerService.loadCustomerCart();
+                return null;
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            initialize(null, null);
+            refreshBtn.setText("\uD83D\uDD04 Refresh");
+            refreshBtn.setDisable(false);
+        });
+        new Thread(task).start();
     }
 
     public void loadCartMenu() {

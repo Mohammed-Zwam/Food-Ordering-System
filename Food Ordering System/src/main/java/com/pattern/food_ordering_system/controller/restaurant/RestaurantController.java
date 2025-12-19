@@ -5,8 +5,10 @@ import com.pattern.food_ordering_system.model.restaurant.Menu;
 import com.pattern.food_ordering_system.model.restaurant.MenuComponent;
 import com.pattern.food_ordering_system.model.user.Restaurant;
 import com.pattern.food_ordering_system.model.user.UserFactory;
+import com.pattern.food_ordering_system.service.customer.CustomerService;
 import com.pattern.food_ordering_system.service.restaurant.RestaurantService;
 import com.pattern.food_ordering_system.utils.ViewHandler;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,7 +40,8 @@ public class RestaurantController implements Initializable {
 
     @FXML
     private VBox emptyMenuMessage;
-
+    @FXML
+    private Button refreshBtn;
 
     @FXML
     private ImageView profileImage;
@@ -55,7 +58,7 @@ public class RestaurantController implements Initializable {
         lblWelcome.setText("Welcome, " + restaurant.getUserName());
         String imgPath = restaurant.getUserImgPath();
 
-        if (imgPath != null && !imgPath.isEmpty() && !imgPath.equalsIgnoreCase("default")) {
+        if (imgPath != "null" && !imgPath.isEmpty() && !imgPath.equalsIgnoreCase("default")) {
             try {
                 var imageStream = getClass().getResourceAsStream(imgPath);
                 if (imageStream != null) {
@@ -67,10 +70,27 @@ public class RestaurantController implements Initializable {
         }
     }
 
-    public void refreshMenu() {
-        RestaurantService.setRestaurantInfo();
-        initialize(null, null);
+    @FXML
+    void refreshMenu() {
+        refreshBtn.setDisable(true);
+        refreshBtn.setText("⏳ Refreshing ...");
+
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                RestaurantService.setRestaurantInfo();
+                return null;
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            initialize(null, null);
+            refreshBtn.setText("\uD83D\uDD04 Refresh");
+            refreshBtn.setDisable(false);
+        });
+        new Thread(task).start();
     }
+
 
     public void loadMenuData() {
         categoriesContainer.getChildren().clear();

@@ -59,7 +59,7 @@
                         <Label style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #0D1B2A;"
                                text="Food Menus"/>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="refreshBtn" onAction="#refreshMenu" prefHeight="30.0" prefWidth="99.0"
+                        <Button fx:id="refreshBtn" onAction="#refreshMenu" prefHeight="30.0"
                                 style="-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 14;"
                                 text="🔄 Refresh"/>
                     </HBox>
@@ -68,21 +68,22 @@
 
                     <HBox alignment="CENTER" prefHeight="6.0" prefWidth="907.0">
 
-                        <TextField fx:id="txtSearch" onKeyReleased="#onSearch" prefHeight="13.0" prefWidth="302.0"
-                                   promptText="🔍 Search ..." style="-fx-background-radius: 50; -fx-padding: 10 20;"/>
+                        <TextField fx:id="txtSearch" focusTraversable="false" onKeyReleased="#onSearch"
+                                   prefHeight="13.0" prefWidth="302.0" promptText="🔍 Search ..."
+                                   style="-fx-background-radius: 50; -fx-padding: 10 20;"/>
 
                         <Region HBox.hgrow="ALWAYS"/>
                         <HBox alignment="CENTER" prefHeight="38.0" prefWidth="486.0" spacing="20.0">
-                            <ComboBox prefWidth="150.0" promptText="⏱ Delivery Time"/>
-                            <ComboBox fx:id="cmbRating" onAction="#onRatingFilter" prefWidth="150.0"
-                                      promptText="⭐ Rating"/>
-                            <ComboBox fx:id="cmbLocation" onAction="#onLocationFilter" prefWidth="150.0"
-                                      promptText="📍 Location"/>
+                            <ComboBox prefWidth="150.0" promptText="⏱ Delivery Time" focusTraversable="false"/>
+                            <ComboBox fx:id="cmbRating" prefWidth="150.0" promptText="⭐ Rating"
+                                      focusTraversable="false"/>
+                            <ComboBox fx:id="cmbLocation" prefWidth="150.0" promptText="📍 Location"
+                                      focusTraversable="false"/>
                         </HBox>
                     </HBox>
                 </VBox>
 
-                <!--  ScrollPane + FlowPane (Dynamic Cards) -->
+
                 <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
                     <content>
                         <FlowPane fx:id="menuFlowPane" alignment="CENTER" hgap="15.0" prefHeight="855" prefWidth="930"
