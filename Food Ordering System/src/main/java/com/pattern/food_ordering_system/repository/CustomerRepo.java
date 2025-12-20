@@ -7,6 +7,7 @@ import com.pattern.food_ordering_system.entity.Review;
 import com.pattern.food_ordering_system.model.customer.*;
 import com.pattern.food_ordering_system.model.restaurant.Menu;
 import com.pattern.food_ordering_system.model.status.OrderStatus;
+import com.pattern.food_ordering_system.model.status.StatusFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -202,8 +203,7 @@ public class CustomerRepo {
                     ORDER BY o.order_time DESC
                 """;
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = DBConnection.getConnection().prepareStatement(sql)) {
 
             pstmt.setLong(1, customerId);
             ResultSet rs = pstmt.executeQuery();
@@ -223,7 +223,6 @@ public class CustomerRepo {
                 order.setOrderId(rs.getLong("order_id"));
                 order.setStatus(OrderStatus.valueOf(rs.getString("status")));
                 order.setRestaurantId(rs.getLong("restaurant_id"));
-
                 order.setReview(review);
 
                 if (rs.getTimestamp("order_time") != null) {

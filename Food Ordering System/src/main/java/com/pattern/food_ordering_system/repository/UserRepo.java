@@ -27,6 +27,7 @@ public class UserRepo {
                 user.setRole(Role.valueOf(rs.getString("role")));
                 user.setPassword(rs.getString("password"));
                 user.setUserImgPath(rs.getString("image_path"));
+                user.setZone(rs.getString("zone"));
             }
             return user;
         } catch (SQLException e) {

@@ -7,6 +7,8 @@ import com.pattern.food_ordering_system.model.status.OrderStatus;
 import com.pattern.food_ordering_system.model.customer.PaymentMethod;
 import com.pattern.food_ordering_system.model.restaurant.Menu;
 import com.pattern.food_ordering_system.model.restaurant.RestaurantOrder;
+import com.pattern.food_ordering_system.model.status.Status;
+import com.pattern.food_ordering_system.model.status.StatusFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -166,7 +168,7 @@ public class RestaurantRepo {
                     WHERE ords.restaurant_id = ?
                 """;
 
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(ordersQuery)) {
+        try (PreparedStatement pstmt = DBConnection.getConnection().prepareStatement(ordersQuery)) {
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
 
@@ -175,11 +177,14 @@ public class RestaurantRepo {
                 restaurantOrder.setCustomerName(rs.getString("customer_name"));
                 restaurantOrder.setOrderId(rs.getLong("order_id"));
                 restaurantOrder.setDeliveryAddress(rs.getString("delivery_address"));
-                restaurantOrder.setStatus(OrderStatus.valueOf(rs.getString("status")));
+
+                restaurantOrder.setStatus(OrderStatus.valueOf(rs.getString("status"))); // TEMP
+
                 restaurantOrder.setOrderPrice(rs.getDouble("total_price") - rs.getDouble("delivery_fee"));
                 restaurantOrder.setOrderTime(rs.getTimestamp("order_time").toLocalDateTime());
                 restaurantOrder.setPaymentMethod(PaymentMethod.valueOf(rs.getString("payment_method")));
-
+                Status orderStatus = StatusFactory.getOrderStatusObj(OrderStatus.valueOf(rs.getString("status")));
+                restaurantOrder.setOrderStatus(orderStatus);
                 orders.add(restaurantOrder);
             }
         } catch (SQLException e) {

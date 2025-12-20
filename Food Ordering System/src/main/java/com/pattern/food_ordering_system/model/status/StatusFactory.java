@@ -10,6 +10,7 @@ public class StatusFactory {
         statusMap.put(OrderStatus.CONFIRMED, new ConfirmedStatus());
         statusMap.put(OrderStatus.BEING_PREPARED, new BeingPreparedStatus());
         statusMap.put(OrderStatus.OUT_FOR_DELIVERY, new OurForDeliveryStatus());
+        statusMap.put(OrderStatus.READY_FOR_DELIVERY, new ReadyForDeliveryStatus());
         statusMap.put(OrderStatus.DELIVERED, new DeliveredStatus());
     }
 

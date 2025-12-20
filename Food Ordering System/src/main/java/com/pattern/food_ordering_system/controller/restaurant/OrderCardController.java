@@ -17,8 +17,7 @@ public class OrderCardController {
     private Label orderId, customerName, address, paymentMethod, time, price;
     @FXML
     private VBox itemsContainer;
-    @FXML
-    private Button rateBtn;
+
     private RestaurantOrder order;
 
     @FXML
@@ -26,6 +25,7 @@ public class OrderCardController {
 
     @FXML
     private Label orderPlaced, confirmed, beingPrepared, completed;
+
 
     public void setOrderData(RestaurantOrder order) {
         this.order = order;
@@ -42,11 +42,38 @@ public class OrderCardController {
             nameQty.setStyle("-fx-font-size: 13;");
             itemsContainer.getChildren().add(nameQty);
         }
+
+        setOrderStatus();
     }
 
 
     public void setOrderStatus() {
         OrderStatus status = order.getOrderStatus().getCurrentStatus();
+        switch (status) {
+            case OrderStatus.ORDER_PLACED -> {
+                btnAccept.setManaged(true);
+                btnAccept.setVisible(true);
+                orderPlaced.setManaged(true);
+                orderPlaced.setVisible(true);
+            }
+            case OrderStatus.CONFIRMED -> {
+                btnMarkReady.setManaged(true);
+                btnMarkReady.setVisible(true);
+                confirmed.setManaged(true);
+                confirmed.setVisible(true);
+            }
 
+            case OrderStatus.BEING_PREPARED -> {
+                btnOutForDelivery.setManaged(true);
+                btnOutForDelivery.setVisible(true);
+                beingPrepared.setManaged(true);
+                beingPrepared.setVisible(true);
+            }
+
+            default -> {
+                completed.setManaged(true);
+                completed.setVisible(true);
+            }
+        }
     }
 }

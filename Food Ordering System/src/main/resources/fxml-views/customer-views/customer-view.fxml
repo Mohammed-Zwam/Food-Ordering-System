@@ -74,7 +74,8 @@
 
                         <Region HBox.hgrow="ALWAYS"/>
                         <HBox alignment="CENTER" prefHeight="38.0" prefWidth="486.0" spacing="20.0">
-                            <ComboBox prefWidth="150.0" promptText="⏱ Delivery Time" focusTraversable="false"/>
+                            <ComboBox fx:id="cmbDeliveryTime" prefWidth="150.0" promptText="⏱ Delivery Time"
+                                      focusTraversable="false"/>
                             <ComboBox fx:id="cmbRating" prefWidth="150.0" promptText="⭐ Rating"
                                       focusTraversable="false"/>
                             <ComboBox fx:id="cmbLocation" prefWidth="150.0" promptText="📍 Location"
