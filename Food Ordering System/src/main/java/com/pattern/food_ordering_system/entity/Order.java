@@ -1,6 +1,6 @@
 package com.pattern.food_ordering_system.entity;
 
-import com.pattern.food_ordering_system.model.customer.OrderStatus;
+import com.pattern.food_ordering_system.model.status.OrderStatus;
 import com.pattern.food_ordering_system.model.customer.PaymentMethod;
 import com.pattern.food_ordering_system.model.status.Status;
 

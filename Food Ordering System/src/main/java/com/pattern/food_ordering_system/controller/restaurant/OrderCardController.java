@@ -1,6 +1,7 @@
 package com.pattern.food_ordering_system.controller.restaurant;
 
 import com.pattern.food_ordering_system.entity.OrderItem;
+import com.pattern.food_ordering_system.model.status.OrderStatus;
 import com.pattern.food_ordering_system.model.restaurant.RestaurantOrder;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,6 +20,12 @@ public class OrderCardController {
     @FXML
     private Button rateBtn;
     private RestaurantOrder order;
+
+    @FXML
+    private Button btnAccept, btnMarkReady, btnOutForDelivery;
+
+    @FXML
+    private Label orderPlaced, confirmed, beingPrepared, completed;
 
     public void setOrderData(RestaurantOrder order) {
         this.order = order;
@@ -39,6 +46,7 @@ public class OrderCardController {
 
 
     public void setOrderStatus() {
-        order.getOrderStatus();
+        OrderStatus status = order.getOrderStatus().getCurrentStatus();
+
     }
 }

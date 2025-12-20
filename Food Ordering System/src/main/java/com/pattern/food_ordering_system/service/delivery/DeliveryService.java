@@ -1,6 +1,6 @@
 package com.pattern.food_ordering_system.service.delivery;
 
-import com.pattern.food_ordering_system.model.customer.OrderStatus;
+import com.pattern.food_ordering_system.model.status.OrderStatus;
 import com.pattern.food_ordering_system.model.delivery.DeliveryOrder;
 import com.pattern.food_ordering_system.model.user.Delivery;
 import com.pattern.food_ordering_system.model.user.UserFactory;

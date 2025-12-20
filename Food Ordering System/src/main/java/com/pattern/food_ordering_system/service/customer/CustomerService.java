@@ -3,6 +3,7 @@ package com.pattern.food_ordering_system.service.customer;
 import com.pattern.food_ordering_system.entity.CartItem;
 import com.pattern.food_ordering_system.entity.OrderItem;
 import com.pattern.food_ordering_system.model.customer.*;
+import com.pattern.food_ordering_system.model.status.OrderStatus;
 import com.pattern.food_ordering_system.model.user.Customer;
 import com.pattern.food_ordering_system.model.user.UserFactory;
 import com.pattern.food_ordering_system.repository.CustomerRepo;

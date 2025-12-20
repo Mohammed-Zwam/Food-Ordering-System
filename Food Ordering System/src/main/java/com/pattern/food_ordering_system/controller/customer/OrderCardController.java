@@ -1,21 +1,20 @@
 package com.pattern.food_ordering_system.controller.customer;
 
-import com.pattern.food_ordering_system.entity.CartItem;
-import com.pattern.food_ordering_system.entity.Order;
 import com.pattern.food_ordering_system.entity.OrderItem;
 import com.pattern.food_ordering_system.model.customer.CustomerOrder;
-import com.pattern.food_ordering_system.model.customer.OrderStatus;
+import com.pattern.food_ordering_system.model.status.OrderStatus;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import com.pattern.food_ordering_system.entity.Review;
+import com.pattern.food_ordering_system.repository.ReviewRepo;
+import com.pattern.food_ordering_system.model.user.UserFactory;
+import org.controlsfx.control.Rating;
 
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -61,6 +60,10 @@ public class OrderCardController {
 
             setupItemsTooltip(order.getItems());
             setActiveStatues();
+        }
+
+        if (order.getReview() != null) {
+            rateBtn.setText("Read your review");
         }
     }
 
@@ -110,18 +113,105 @@ public class OrderCardController {
     }
 
     private void setActiveStatues() {
-        VBox[] stages = {ORDER_PLACED, CONFIRMED, BEING_PREPARED, OUT_FOR_DELIVERY, DELIVERED};
+        VBox[] stages = {ORDER_PLACED, CONFIRMED, BEING_PREPARED, BEING_PREPARED /* same affect of READY_FOR_DELIVERY */, OUT_FOR_DELIVERY, DELIVERED};
         int idx = order.getStatus().ordinal();
         for (int i = 0; i <= idx; i++) {
             stages[i].setOpacity(1);
         }
-        for (int i = idx + 1; i < 5; i++) {
+        for (int i = idx + 1; i < 6; i++) {
             stages[i].setOpacity(0.1);
         }
     }
 
+
     @FXML
     private void onRate() {
-        System.out.println("Re-ordering logic for Order ID: " + order.getOrderId());
+        Review existingReview = order.getReview();
+
+        if (existingReview != null) {
+            showReadOnlyReview(existingReview);
+        } else {
+            showRatingDialog();
+        }
+    }
+
+    private void showRatingDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+
+        dialog.setTitle("Rate Your Meal");
+        dialog.setHeaderText("How was your order from " + order.getRestaurantName() + "?");
+
+        ButtonType submitBtn = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(submitBtn, ButtonType.CANCEL);
+
+        VBox content = new VBox(10);
+
+        Rating ratingControl = new Rating();
+        ratingControl.setMax(5);
+        ratingControl.setRating(5);
+
+        TextArea commentArea = new TextArea();
+        commentArea.setPromptText("Write your comment here...");
+        commentArea.setWrapText(true);
+        commentArea.setPrefRowCount(3);
+
+        content.getChildren().addAll(new Label("Rating:"), ratingControl, new Label("Comment:"), commentArea);
+        dialog.getDialogPane().setContent(content);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if (result.isPresent() && result.get() == submitBtn) {
+            double ratingValue = ratingControl.getRating();
+            String commentText = commentArea.getText();
+            long customerId = UserFactory.getUser().getId();
+
+            Review review = new Review(ratingValue, commentText);
+            boolean success = ReviewRepo.addReview(
+                    order.getOrderId(),
+                    customerId,
+                    order.getRestaurantId(),
+                    review
+            );
+            order.setReview(review);
+            setOrderData(this.order);
+
+
+            if (success) {
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Thank you for your feedback!");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Could not save review.");
+            }
+        }
+    }
+
+    private void showReadOnlyReview(Review review) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Your Review");
+        dialog.setHeaderText("You have already rated this order.");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        VBox content = new VBox(10);
+        Rating ratingControl = new Rating();
+        ratingControl.setMax(5);
+        ratingControl.setRating(review.getRating());
+        ratingControl.setMouseTransparent(true);
+        ratingControl.setFocusTraversable(false);
+
+        TextArea commentArea = new TextArea();
+        commentArea.setText(review.getComment());
+        commentArea.setEditable(false);
+        commentArea.setWrapText(true);
+
+        content.getChildren().addAll(new Label("Your Rating:"), ratingControl, new Label("Your Comment:"), commentArea);
+        dialog.getDialogPane().setContent(content);
+        dialog.showAndWait();
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

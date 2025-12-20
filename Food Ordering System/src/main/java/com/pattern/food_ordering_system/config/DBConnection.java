@@ -11,11 +11,12 @@ public class DBConnection {
     private static final String USER = "root";
     private static final String PASSWORD = "ADMIN@2025";
 
-    private DBConnection() {}
+    private DBConnection() {
+    }
 
     public static Connection getConnection() {
         try {
-            if (conn == null|| conn.isClosed()) conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            if (conn == null || conn.isClosed()) conn = DriverManager.getConnection(URL, USER, PASSWORD);
             return conn;
         } catch (SQLException e) {
             e.printStackTrace();

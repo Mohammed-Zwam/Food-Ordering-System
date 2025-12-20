@@ -3,9 +3,10 @@ package com.pattern.food_ordering_system.repository;
 import com.pattern.food_ordering_system.config.DBConnection;
 import com.pattern.food_ordering_system.entity.CartItem;
 import com.pattern.food_ordering_system.entity.OrderItem;
+import com.pattern.food_ordering_system.entity.Review;
 import com.pattern.food_ordering_system.model.customer.*;
-import com.pattern.food_ordering_system.entity.Order;
 import com.pattern.food_ordering_system.model.restaurant.Menu;
+import com.pattern.food_ordering_system.model.status.OrderStatus;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -211,6 +212,7 @@ public class CustomerRepo {
                 long currentOrderId = rs.getLong("order_id");
 
                 List<OrderItem> orderItems = findItemsByOrderId(currentOrderId);
+                Review review = ReviewRepo.getReviewByOrderId(currentOrderId);
 
                 CustomerOrder order = new CustomerOrder();
                 order.setItems(orderItems);
@@ -220,6 +222,9 @@ public class CustomerRepo {
                 order.setRestaurantLogo(rs.getString("restaurant_logo"));
                 order.setOrderId(rs.getLong("order_id"));
                 order.setStatus(OrderStatus.valueOf(rs.getString("status")));
+                order.setRestaurantId(rs.getLong("restaurant_id"));
+
+                order.setReview(review);
 
                 if (rs.getTimestamp("order_time") != null) {
                     order.setOrderTime(rs.getTimestamp("order_time").toLocalDateTime());

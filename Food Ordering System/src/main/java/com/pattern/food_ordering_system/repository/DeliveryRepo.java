@@ -1,7 +1,7 @@
 package com.pattern.food_ordering_system.repository;
 
 import com.pattern.food_ordering_system.config.DBConnection;
-import com.pattern.food_ordering_system.model.customer.OrderStatus;
+import com.pattern.food_ordering_system.model.status.OrderStatus;
 import com.pattern.food_ordering_system.model.customer.PaymentMethod;
 import com.pattern.food_ordering_system.model.delivery.DeliveryOrder;
 import com.pattern.food_ordering_system.model.user.UserFactory;
@@ -31,7 +31,7 @@ public class DeliveryRepo {
         if (isBusy) {
             sql.append("WHERE o.delivery_id = ? AND o.status = 'OUT_FOR_DELIVERY'");
         } else {
-            sql.append("WHERE o.status = 'BEING_PREPARED'");
+            sql.append("WHERE o.status = 'READY_FOR_DELIVERY'");
         }
 
         try (Connection conn = DBConnection.getConnection();
@@ -80,7 +80,7 @@ public class DeliveryRepo {
     }
 
     public static boolean assignOrderToDriver(long orderId, long driverId) {
-        String sql = "UPDATE orders SET status = 'OUT_FOR_DELIVERY', delivery_id = ? WHERE order_id = ? AND status = 'BEING_PREPARED'";
+        String sql = "UPDATE orders SET status = 'OUT_FOR_DELIVERY', delivery_id = ? WHERE order_id = ? AND status = 'READY_FOR_DELIVERY'";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, driverId);

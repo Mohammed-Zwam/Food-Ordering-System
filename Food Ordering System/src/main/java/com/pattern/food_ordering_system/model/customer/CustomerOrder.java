@@ -1,6 +1,7 @@
 package com.pattern.food_ordering_system.model.customer;
 
 import com.pattern.food_ordering_system.entity.Order;
+import com.pattern.food_ordering_system.entity.Review;
 
 
 public class CustomerOrder extends Order {
@@ -9,6 +10,7 @@ public class CustomerOrder extends Order {
     private long restaurantId;
     private long customerId;
     private double totalPriceWithFee;
+    private Review review;
 
     public long getCustomerId() {
         return customerId;
@@ -52,5 +54,13 @@ public class CustomerOrder extends Order {
 
     public double getTotalPrice() {
         return totalPriceWithFee;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
     }
 }

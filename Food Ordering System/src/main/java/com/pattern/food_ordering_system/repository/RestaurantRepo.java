@@ -1,16 +1,12 @@
 package com.pattern.food_ordering_system.repository;
 
 import com.pattern.food_ordering_system.config.DBConnection;
-import com.pattern.food_ordering_system.entity.CartItem;
 import com.pattern.food_ordering_system.entity.MenuItem;
 import com.pattern.food_ordering_system.entity.OrderItem;
-import com.pattern.food_ordering_system.model.customer.CustomerOrder;
-import com.pattern.food_ordering_system.model.customer.FoodItem;
-import com.pattern.food_ordering_system.model.customer.OrderStatus;
+import com.pattern.food_ordering_system.model.status.OrderStatus;
 import com.pattern.food_ordering_system.model.customer.PaymentMethod;
 import com.pattern.food_ordering_system.model.restaurant.Menu;
 import com.pattern.food_ordering_system.model.restaurant.RestaurantOrder;
-import com.pattern.food_ordering_system.model.user.Restaurant;
 
 import java.sql.*;
 import java.util.ArrayList;

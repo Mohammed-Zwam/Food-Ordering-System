@@ -1,6 +1,6 @@
 package com.pattern.food_ordering_system.controller.delivery;
 
-import com.pattern.food_ordering_system.model.customer.OrderStatus;
+import com.pattern.food_ordering_system.model.status.OrderStatus;
 import com.pattern.food_ordering_system.model.delivery.DeliveryOrder;
 import com.pattern.food_ordering_system.service.delivery.DeliveryService;
 import com.pattern.food_ordering_system.utils.AlertHandler;
@@ -35,7 +35,7 @@ public class DeliveryOrderCardController {
     }
 
     private void updateButtonState() {
-        if (currentOrder.getStatus() == OrderStatus.BEING_PREPARED) {
+        if (currentOrder.getStatus() == OrderStatus.READY_FOR_DELIVERY) {
             btnAction.setText("📦 Pickup Order");
             btnAction.setStyle("-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;");
             btnAction.setOnAction(e -> handlePickup());
