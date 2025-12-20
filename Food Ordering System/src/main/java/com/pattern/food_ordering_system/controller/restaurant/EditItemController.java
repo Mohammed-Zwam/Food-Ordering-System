@@ -99,7 +99,7 @@ public class EditItemController {
 
         if (success) {
             AlertHandler.showInfo("Operation Completed", "Item updated successfully.");
-            parentController.loadMenuData();
+            parentController.refreshMenu();
             closeWindow(event);
         } else {
             AlertHandler.showError("Operation Failed", "Failed to update item.");

@@ -81,7 +81,7 @@ public class Order {
     }
 
     public void nextOrderStatus() {
-        orderStatus.nextStatus(this.orderStatus);
+        orderStatus.nextStatus(this);
     }
 
     public void setOrderStatus(Status orderStatus) {

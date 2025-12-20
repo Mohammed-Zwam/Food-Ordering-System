@@ -77,4 +77,13 @@ public class CustomerService {
             throw new CartException("Failed to create order: " + e.getMessage());
         }
     }
+    public static String getCartRestaurantLocation() {
+        if (customer.getCart().isEmpty()) {
+            return null;
+        }
+        return customer.getCart().getCartItems().stream()
+                .findFirst()
+                .map(item -> item.getFoodItem().getLocation())
+                .orElse(null);
+    }
 }

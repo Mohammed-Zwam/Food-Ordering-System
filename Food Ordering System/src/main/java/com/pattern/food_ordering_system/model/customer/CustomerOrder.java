@@ -52,9 +52,6 @@ public class CustomerOrder extends Order {
         this.totalPriceWithFee = totalPriceWithFee;
     }
 
-    public double getTotalPrice() {
-        return totalPriceWithFee;
-    }
 
     public Review getReview() {
         return review;

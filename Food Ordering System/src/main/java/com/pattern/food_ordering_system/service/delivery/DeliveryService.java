@@ -5,6 +5,7 @@ import com.pattern.food_ordering_system.model.delivery.DeliveryOrder;
 import com.pattern.food_ordering_system.model.user.Delivery;
 import com.pattern.food_ordering_system.model.user.UserFactory;
 import com.pattern.food_ordering_system.repository.DeliveryRepo;
+import com.pattern.food_ordering_system.repository.OrderRepo;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class DeliveryService {
     }
 
     public static void markAsDelivered(long orderId) {
-        if (!DeliveryRepo.updateOrderStatus(orderId, OrderStatus.DELIVERED)) {
+        if (!OrderRepo.updateOrderStatus(orderId, OrderStatus.DELIVERED)) {
             throw new RuntimeException("Failed to update order status.");
         }
     }

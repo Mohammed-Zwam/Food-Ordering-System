@@ -107,15 +107,14 @@ public class RestaurantRepo {
         }
     }
 
-    public static boolean addRestaurantIdToRestaurants(long id) {
+    public static void addRestaurantIdToRestaurants(long id) {
         String sql = "INSERT INTO restaurants(restaurant_id, rate) VALUES (?, ?)";
         try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
             ps.setLong(1, id);
             ps.setInt(2, 0);
-            return ps.executeUpdate() > 0;
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -178,13 +177,16 @@ public class RestaurantRepo {
                 restaurantOrder.setOrderId(rs.getLong("order_id"));
                 restaurantOrder.setDeliveryAddress(rs.getString("delivery_address"));
 
-                restaurantOrder.setStatus(OrderStatus.valueOf(rs.getString("status"))); // TEMP
+                OrderStatus orderStatus = OrderStatus.valueOf(rs.getString("status"));
+                restaurantOrder.setStatus(orderStatus); // TEMP
+                Status status = StatusFactory.getOrderStatusObj(orderStatus);
+                restaurantOrder.setOrderStatus(status);
 
                 restaurantOrder.setOrderPrice(rs.getDouble("total_price") - rs.getDouble("delivery_fee"));
                 restaurantOrder.setOrderTime(rs.getTimestamp("order_time").toLocalDateTime());
                 restaurantOrder.setPaymentMethod(PaymentMethod.valueOf(rs.getString("payment_method")));
-                Status orderStatus = StatusFactory.getOrderStatusObj(OrderStatus.valueOf(rs.getString("status")));
-                restaurantOrder.setOrderStatus(orderStatus);
+                restaurantOrder.setReview(ReviewRepo.getReviewByOrderId(restaurantOrder.getOrderId()));
+
                 orders.add(restaurantOrder);
             }
         } catch (SQLException e) {

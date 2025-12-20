@@ -1,5 +1,7 @@
 package com.pattern.food_ordering_system.model.status;
 
+import com.pattern.food_ordering_system.entity.Order;
+
 /*== DP >> State Pattern ==*/
 public abstract class Status {
     OrderStatus status;
@@ -12,5 +14,5 @@ public abstract class Status {
         this.status = status;
     }
 
-    abstract public void nextStatus(Status status);
+    abstract public void nextStatus(Order order);
 }

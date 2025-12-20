@@ -40,13 +40,14 @@ public class RestaurantController implements Initializable {
 
     @FXML
     private VBox emptyMenuMessage;
+
     @FXML
     private Button refreshBtn;
 
     @FXML
     private ImageView profileImage;
 
-    private Restaurant restaurant = (Restaurant) UserFactory.getUser();
+    private final Restaurant restaurant = (Restaurant) UserFactory.getUser();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -131,7 +132,6 @@ public class RestaurantController implements Initializable {
                             "-fx-padding: 2 8; " +
                             "-fx-font-size: 12px;"
             );
-
             HBox header = new HBox(10, nameLabel, countLabel);
             header.setAlignment(Pos.CENTER_LEFT);
             header.setPadding(new Insets(0, 10, 0, 10));

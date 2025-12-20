@@ -15,6 +15,8 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <BorderPane prefHeight="1275.0" prefWidth="1700.0" style="-fx-background-color: #F4F8FF;"
             xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.pattern.food_ordering_system.controller.customer.CustomerController">
@@ -75,9 +77,31 @@
                         <Region HBox.hgrow="ALWAYS"/>
                         <HBox alignment="CENTER" prefHeight="38.0" prefWidth="486.0" spacing="20.0">
                             <ComboBox fx:id="cmbDeliveryTime" prefWidth="150.0" promptText="⏱ Delivery Time"
-                                      focusTraversable="false"/>
+                                      focusTraversable="false">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="≤ 10 min"/>
+                                        <String fx:value="≤ 15 min"/>
+                                        <String fx:value="≤ 30 min"/>
+                                        <String fx:value="≤ 45 min"/>
+                                        <String fx:value="≤ 60 min"/>
+                                        <String fx:value="> 60 min"/>
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
                             <ComboBox fx:id="cmbRating" prefWidth="150.0" promptText="⭐ Rating"
-                                      focusTraversable="false"/>
+                                      focusTraversable="false">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="⭐"/>
+                                        <String fx:value="⭐⭐"/>
+                                        <String fx:value="⭐⭐⭐"/>
+                                        <String fx:value="⭐⭐⭐⭐"/>
+                                        <String fx:value="⭐⭐⭐⭐⭐"/>
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+
                             <ComboBox fx:id="cmbLocation" prefWidth="150.0" promptText="📍 Location"
                                       focusTraversable="false"/>
                         </HBox>

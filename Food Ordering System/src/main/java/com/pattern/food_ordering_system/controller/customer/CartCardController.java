@@ -13,14 +13,22 @@ import javafx.scene.image.ImageView;
 
 
 public class CartCardController {
-    @FXML private ImageView foodImageView;
-    @FXML private Label foodNameLabel;
-    @FXML private Button removeButton;
-    @FXML private Button minusButton;
-    @FXML private Label quantityLabel;
-    @FXML private Label price;
-    @FXML private Button plusButton;
-    @FXML private Label availabilityLabel;
+    @FXML
+    private ImageView foodImageView;
+    @FXML
+    private Label foodNameLabel;
+    @FXML
+    private Button removeButton;
+    @FXML
+    private Button minusButton;
+    @FXML
+    private Label quantityLabel;
+    @FXML
+    private Label price;
+    @FXML
+    private Button plusButton;
+    @FXML
+    private Label availabilityLabel;
 
     private static CustomerController parentController;
     private CartItem cartItem;
@@ -37,26 +45,25 @@ public class CartCardController {
     }
 
 
-
     public void setAvailability(boolean available) {
         if (available) {
             availabilityLabel.setText("Available");
             availabilityLabel.setStyle("""
-            -fx-font-size: 11;
-            -fx-text-fill: #2e7d32;
-            -fx-background-color: #e8f5e9;
-            -fx-padding: 2 6;
-            -fx-background-radius: 6;
-        """);
+                        -fx-font-size: 11;
+                        -fx-text-fill: #2e7d32;
+                        -fx-background-color: #e8f5e9;
+                        -fx-padding: 2 6;
+                        -fx-background-radius: 6;
+                    """);
         } else {
             availabilityLabel.setText("Unavailable");
             availabilityLabel.setStyle("""
-            -fx-font-size: 11;
-            -fx-text-fill: #c62828;
-            -fx-background-color: #ffebee;
-            -fx-padding: 2 6;
-            -fx-background-radius: 6;
-        """);
+                        -fx-font-size: 11;
+                        -fx-text-fill: #c62828;
+                        -fx-background-color: #ffebee;
+                        -fx-padding: 2 6;
+                        -fx-background-radius: 6;
+                    """);
 
 
             plusButton.setDisable(true);

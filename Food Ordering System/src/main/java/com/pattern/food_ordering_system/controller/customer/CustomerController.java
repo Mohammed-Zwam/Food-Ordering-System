@@ -11,6 +11,7 @@ import com.pattern.food_ordering_system.service.customer.CustomerService;
 import com.pattern.food_ordering_system.service.customer.DeliveryTimeService;
 import com.pattern.food_ordering_system.utils.AlertHandler;
 import com.pattern.food_ordering_system.utils.InputParser;
+import com.pattern.food_ordering_system.utils.Locations;
 import com.pattern.food_ordering_system.utils.ViewHandler;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -61,30 +62,35 @@ public class CustomerController implements Initializable {
 
     private Menu menu;
     private List<FoodItem> allItems;
-    private final Map<Long, Double> deliveryTimeCache = new HashMap<>();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadMenuDataForCustomer();
-        renderItems(allItems);
-        FoodCardController.setParentController(this);
-        CartCardController.setParentController(this);
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                loadMenuDataForCustomer();
+                return null;
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            renderItems(allItems);
+            System.out.println("RENDER 1");
+            // SET EVENTS HERE TO PREVENT MULTIPLE INVOKE WHEN SETUP ComboBox |  # ASHRAF ;)
+            cmbLocation.setOnAction(null);
+            cmbRating.setOnAction(null);
+            cmbDeliveryTime.setOnAction(null);
+            setupLocationFilter();
+            cmbDeliveryTime.setOnAction(this::onDeliveryTimeFilter);
+            cmbLocation.setOnAction(this::onLocationFilter);
+            cmbRating.setOnAction(this::onRatingFilter);
+        });
         setCustomerInfo();
         loadCartMenu();
-        // SET EVENTS HERE TO PREVENT MULTIPLE INVOKE WHEN SETUP ComboBox |  # ASHRAF ;)
-        cmbLocation.setOnAction(null);
-        cmbRating.setOnAction(null);
-        cmbDeliveryTime.setOnAction(null);
-
-        setupRatingFilter();
-        setupLocationFilter();
-        setupDeliveryTimeFilter();
-        calculateDeliveryTimesOnce();
-
-        cmbDeliveryTime.setOnAction(this::onDeliveryTimeFilter);
-        cmbLocation.setOnAction(this::onLocationFilter);
-        cmbRating.setOnAction(this::onRatingFilter);
+        FoodCardController.setParentController(this);
+        CartCardController.setParentController(this);
+        new Thread(task).start();
     }
 
 
@@ -169,20 +175,6 @@ public class CustomerController implements Initializable {
         ViewHandler.changeView(stage, "registration-views/login-view");
     }
 
-    private void setupRatingFilter() {
-        String selected = cmbRating.getValue();
-        if (selected != null) cmbRating.getItems().clear();
-
-        cmbRating.getItems().addAll(
-                "All Ratings",
-                "⭐",
-                "⭐⭐",
-                "⭐⭐⭐",
-                "⭐⭐⭐⭐",
-                "⭐⭐⭐⭐⭐"
-        );
-        cmbRating.setValue("All Ratings");
-    }
 
     @FXML
     private void onRatingFilter(ActionEvent event) {
@@ -207,20 +199,12 @@ public class CustomerController implements Initializable {
     }
 
     private void setupLocationFilter() {
-        List<String> locations = new ArrayList<>();
-
-        for (FoodItem item : allItems) {
-            String loc = item.getLocation();
-            if (loc != null && !locations.contains(loc)) {
-                locations.add(loc);
-            }
-        }
-
         cmbLocation.getItems().clear();
         cmbLocation.getItems().add("All Locations");
-        cmbLocation.getItems().addAll(locations);
+        cmbLocation.getItems().addAll(Locations.ZONES);
         cmbLocation.setValue("All Locations");
     }
+
 
     @FXML
     private void onLocationFilter(ActionEvent event) {
@@ -352,7 +336,7 @@ public class CustomerController implements Initializable {
         List<FoodItem> filtered = new ArrayList<>();
 
         for (FoodItem item : allItems) {
-            double time = deliveryTimeCache.get(item.getId());
+            double time = DeliveryTimeService.getDeliveryTimeInMinutes(customer.getZone(), item.getLocation());
             if (selected.equals("> 60 min")) {
                 if (time > 60) filtered.add(item);
             } else {
@@ -362,34 +346,4 @@ public class CustomerController implements Initializable {
 
         renderItems(filtered);
     }
-
-    private void calculateDeliveryTimesOnce() {
-        String customerZone = customer.getZone();
-
-        for (FoodItem item : allItems) {
-            String restaurantZone = item.getLocation();
-
-            double time = DeliveryTimeService.getDeliveryTimeInMinutes(
-                    customerZone,
-                    restaurantZone
-            );
-
-            deliveryTimeCache.put(item.getId(), time);
-        }
-    }
-
-    private void setupDeliveryTimeFilter() {
-        cmbDeliveryTime.getItems().clear();
-        cmbDeliveryTime.getItems().addAll(
-                "All",
-                "≤ 10 min",
-                "≤ 15 min",
-                "≤ 30 min",
-                "≤ 45 min",
-                "≤ 60 min",
-                "> 60 min"
-        );
-        cmbDeliveryTime.setValue("All");
-    }
-
 }

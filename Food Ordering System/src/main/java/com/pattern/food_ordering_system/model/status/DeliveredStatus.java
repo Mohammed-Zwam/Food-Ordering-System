@@ -1,5 +1,7 @@
 package com.pattern.food_ordering_system.model.status;
 
+import com.pattern.food_ordering_system.entity.Order;
+
 public class DeliveredStatus extends Status {
     public DeliveredStatus() {
         super.setOrderStatus(OrderStatus.DELIVERED);
@@ -7,5 +9,5 @@ public class DeliveredStatus extends Status {
 
 
     @Override
-    public void nextStatus(Status status) { /* LAST STAGE */ }
+    public void nextStatus(Order order) { /* LAST STAGE */ }
 }

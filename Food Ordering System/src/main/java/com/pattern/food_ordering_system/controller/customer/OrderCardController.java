@@ -37,14 +37,13 @@ public class OrderCardController {
     @FXML
     private Button rateBtn;
 
-
     private CustomerOrder order;
 
     public void setOrderData(CustomerOrder order) {
         this.order = order;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd • hh:mm a", Locale.ENGLISH);
         lblDate.setText(order.getOrderTime().format(formatter));
-        lblTotal.setText(String.format(Locale.US, "EGP %.2f", order.getTotalPrice()));
+        lblTotal.setText(String.format(Locale.US, "EGP %.2f", order.getTotalPriceWithFee()));
         int count = order.getItems() != null ? order.getItems().size() : 0;
         lblItemsCount.setText(count + " items");
         lblRestaurantName.setText(order.getRestaurantName());

@@ -147,8 +147,8 @@ public class CustomerRepo {
     public static void insertOrder(CustomerOrder order) throws SQLException {
         String orderSql = """
                     INSERT INTO orders (restaurant_id, customer_id, total_price, payment_method, 
-                                       delivery_address, order_time, status)
-                    VALUES (?, ?, ?, ?, ?, ?, ?);
+                                       delivery_address, order_time, status, delivery_fee)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?);
                 """;
 
         try (Connection conn = DBConnection.getConnection();
@@ -156,12 +156,12 @@ public class CustomerRepo {
 
             pstmt.setLong(1, order.getRestaurantId());
             pstmt.setLong(2, order.getCustomerId());
-            pstmt.setDouble(3, order.getTotalPrice());
+            pstmt.setDouble(3, order.getOrderPrice());
             pstmt.setString(4, order.getPaymentMethod().name());
             pstmt.setString(5, order.getDeliveryAddress());
             pstmt.setTimestamp(6, Timestamp.valueOf(order.getOrderTime()));
             pstmt.setString(7, order.getStatus().toString());
-
+            pstmt.setDouble(8, order.getTotalPriceWithFee() - order.getOrderPrice());
             pstmt.executeUpdate();
 
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
@@ -173,7 +173,6 @@ public class CustomerRepo {
             clearCartByCustomerId(order.getCustomerId());
         }
     }
-
     private static void insertOrderItems(CustomerOrder order) throws SQLException {
         String itemSql = """
                     INSERT INTO order_items (order_id, food_item_id, quantity, price)

@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -70,7 +71,7 @@ public class RestaurantOrdersController implements Initializable {
         ordersGrid.setHgap(20);
         ordersGrid.setVgap(20);
         ordersGrid.setPadding(new Insets(10));
-
+        ordersGrid.setAlignment(Pos.CENTER);
 
         for (RestaurantOrder order : orders) {
             try {
@@ -90,7 +91,7 @@ public class RestaurantOrdersController implements Initializable {
 
     public void setRestaurantInfo() {
         userName.setText(restaurant.getUserName());
-        if (!(restaurant.getUserImgPath().equals("default"))) {
+        if (!(restaurant.getUserImgPath().equals("default") || restaurant.getUserImgPath().equals("null"))) {
             try {
                 Image imageFile = new Image(Objects.requireNonNull(RestaurantController.class.getResourceAsStream(restaurant.getUserImgPath())));
                 profileImage.setImage(imageFile);

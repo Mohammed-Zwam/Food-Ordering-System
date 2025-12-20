@@ -1,53 +1,29 @@
 package com.pattern.food_ordering_system.service.customer;
 
-import com.pattern.food_ordering_system.utils.CairoLocations;
-import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Locale;
+import com.pattern.food_ordering_system.utils.Locations;
+
+
 
 public class DeliveryTimeService {
+    private static final double BASE_FEE = 15.0;
+    private static final double COST_PER_MINUTE = 1.0;
+    private static final double MIN_FEE = 20.0;
+    private static final double ERROR_FEE = 30.0;
+
     public static double getDeliveryTimeInMinutes(String originZone, String destinationZone) {
-        double[] o = CairoLocations.COORDS.get(originZone);
-        double[] d = CairoLocations.COORDS.get(destinationZone);
-
-        if (o == null || d == null) {
-            return 999;
+        if (Locations.deliveryTimeCache.containsKey(originZone)) {
+            return Locations.deliveryTimeCache.get(originZone).getOrDefault(destinationZone, 999.0);
         }
-
-        try {
-            String urlStr = String.format(
-                    Locale.US,
-                    "https://router.project-osrm.org/route/v1/driving/%.6f,%.6f;%.6f,%.6f",
-                    o[1], o[0], d[1], d[0]
-            );
-
-
-            HttpURLConnection con = (HttpURLConnection) new URL(urlStr).openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("User-Agent", "FoodOrderingApp/1.0");
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String line;
-
-            while ((line = br.readLine()) != null) response.append(line);
-
-
-            JSONObject obj = new JSONObject(response.toString());
-            JSONObject route = obj.getJSONArray("routes").getJSONObject(0);
-
-            double durationSeconds = route.getDouble("duration");
-            double minutes = durationSeconds / 60.0;
-
-
-            return minutes;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 999;
-        }
+        return 999.0;
     }
+    public static double calculateDeliveryFee(double minutes) {
+        if (minutes >= 999) {
+            return ERROR_FEE;
+        }
+        double fee = BASE_FEE + (minutes * COST_PER_MINUTE);
+        fee = Math.max(fee, MIN_FEE);
+
+        return Math.ceil(fee);
+    }
+
 }

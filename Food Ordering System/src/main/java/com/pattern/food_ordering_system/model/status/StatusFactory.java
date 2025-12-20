@@ -1,9 +1,10 @@
 package com.pattern.food_ordering_system.model.status;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class StatusFactory {
-    private static Map<OrderStatus, Status> statusMap;
+    private static final Map<OrderStatus, Status> statusMap = new HashMap<>();
 
     static {
         statusMap.put(OrderStatus.ORDER_PLACED, new OrderPlacedStatus());
