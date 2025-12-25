@@ -20,10 +20,8 @@ public class ViewHandler {
 
         try {
             ViewCacheEntry entry;
-            boolean isOld = false;
             if (cache.containsKey(fxmlFile)) {
                 entry = cache.get(fxmlFile);
-                isOld = true;
             } else {
                 FXMLLoader fxmlLoader = new FXMLLoader(ViewHandler.class.getResource("/fxml-views/" + fxmlFile + ".fxml"));
                 entry = new ViewCacheEntry(fxmlLoader.load(), fxmlLoader.getController());
@@ -37,7 +35,7 @@ public class ViewHandler {
                 mainScene.setRoot(entry.root);
             }
 
-            if (isOld && entry.controller instanceof Initializable && notSameDashboard(previousFXMLFile, fxmlFile)) {
+            if (entry.controller instanceof Initializable && !fxmlFile.startsWith("customer-views/customer-view")) {
                 ((Initializable) entry.controller).initialize(null, null);
             }
             previousFXMLFile = fxmlFile;

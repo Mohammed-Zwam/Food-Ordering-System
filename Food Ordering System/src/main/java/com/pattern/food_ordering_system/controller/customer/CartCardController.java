@@ -37,7 +37,12 @@ public class CartCardController {
     public void setData(CartItem cartItem) {
         this.cartItem = cartItem;
         FoodItem foodItem = cartItem.getFoodItem();
-        foodImageView.setImage(new Image(foodItem.getImagePath(), true));
+        System.out.println();
+       try {
+           foodImageView.setImage(new Image(foodItem.getImagePath(), true));
+       } catch (Exception e) {
+           System.out.println(e.getMessage());
+       }
         foodNameLabel.setText(foodItem.getName());
         quantityLabel.setText(Integer.toString(cartItem.getQuantity()));
         price.setText(cartItem.getSubTotal() + " EGP");

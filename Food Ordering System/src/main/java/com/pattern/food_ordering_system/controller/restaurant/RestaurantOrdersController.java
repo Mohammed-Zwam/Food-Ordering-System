@@ -90,8 +90,8 @@ public class RestaurantOrdersController implements Initializable {
     }
 
     public void setRestaurantInfo() {
-        userName.setText(restaurant.getUserName());
-        if (!(restaurant.getUserImgPath().equals("default") || restaurant.getUserImgPath().equals("null"))) {
+        userName.setText("Welcome, " + restaurant.getUserName());
+        if (!(restaurant.getUserImgPath() == null || restaurant.getUserImgPath().equals("default") || restaurant.getUserImgPath().equals("null"))) {
             try {
                 Image imageFile = new Image(Objects.requireNonNull(RestaurantController.class.getResourceAsStream(restaurant.getUserImgPath())));
                 profileImage.setImage(imageFile);

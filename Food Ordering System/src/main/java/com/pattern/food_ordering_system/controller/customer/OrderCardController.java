@@ -112,12 +112,13 @@ public class OrderCardController {
     }
 
     private void setActiveStatues() {
-        VBox[] stages = {ORDER_PLACED, CONFIRMED, BEING_PREPARED, BEING_PREPARED /* same affect of READY_FOR_DELIVERY */, OUT_FOR_DELIVERY, DELIVERED};
+        VBox[] stages = {ORDER_PLACED, CONFIRMED, BEING_PREPARED, OUT_FOR_DELIVERY, DELIVERED};
         int idx = order.getStatus().ordinal();
+        if (idx >= 3) idx--;
         for (int i = 0; i <= idx; i++) {
             stages[i].setOpacity(1);
         }
-        for (int i = idx + 1; i < 6; i++) {
+        for (int i = idx + 1; i < 5; i++) {
             stages[i].setOpacity(0.1);
         }
     }

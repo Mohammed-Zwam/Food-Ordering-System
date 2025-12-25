@@ -64,7 +64,7 @@ public class CustomerOrdersController implements Initializable {
     }
 
     private void setCustomerInfo() {
-        userName.setText(customer.getUserName());
+        userName.setText("Welcome, " + customer.getUserName());
         if (!(customer.getUserImgPath() == null || customer.getUserImgPath().equalsIgnoreCase("default"))) {
             Image image = new Image(
                     Objects.requireNonNull(getClass().getResourceAsStream(customer.getUserImgPath()))

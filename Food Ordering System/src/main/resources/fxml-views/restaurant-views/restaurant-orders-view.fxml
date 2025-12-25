@@ -12,13 +12,13 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #F4F8FF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pattern.food_ordering_system.controller.restaurant.RestaurantOrdersController">
+<BorderPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #F4F8FF;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pattern.food_ordering_system.controller.restaurant.RestaurantOrdersController">
     <top>
         <HBox alignment="CENTER_LEFT" prefHeight="70.0" spacing="20" style="-fx-background-color: #FFFFFF; -fx-border-color: #D0D8E8; -fx-border-width: 0 0 1 0; -fx-padding: 5 20;">
             <Label style="-fx-font-family: 'Pacifico'; -fx-font-size: 28px; -fx-text-fill: #1E88E5;" text="Restaurant Dashboard" />
             <Region HBox.hgrow="ALWAYS" />
-            <HBox alignment="CENTER" prefHeight="67.0" prefWidth="205.0" spacing="10.0">
-                <HBox alignment="CENTER" prefHeight="67.0" prefWidth="206.0" spacing="10.0" style="-fx-background-radius: 50; -fx-background-color: #E9EEF6; -fx-padding: 10 15;">
+            <HBox alignment="CENTER" prefHeight="67.0" spacing="10.0">
+                <HBox alignment="CENTER" prefHeight="67.0" spacing="10.0" style="-fx-background-radius: 50; -fx-background-color: #E9EEF6; -fx-padding: 10 15;">
                     <ImageView fx:id="profileImage" fitHeight="64.0" fitWidth="46.0" preserveRatio="true">
                         <image>
                             <Image url="@../../assets/user-icon-SYS.png" />
@@ -57,7 +57,7 @@
         </VBox>
     </left>
     <center>
-        <VBox spacing="20" style="-fx-padding: 30;">
+        <VBox spacing="20" style="-fx-padding: 20;">
             <HBox prefHeight="22.0" prefWidth="760.0">
                 <children>
 
@@ -66,6 +66,7 @@
                     <Button fx:id="refreshBtn" onAction="#refreshMenu" prefHeight="30.0" style="-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 14;" text="🔄 Refresh" />
                 </children>
             </HBox>
+         <Separator prefWidth="200.0" />
             <VBox fx:id="emptyOrdersMessage" alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 15; -fx-border-color: #ddd; -fx-border-radius: 15;">
                 <children>
                     <Label style="-fx-font-size: 40px;" text="🛒" />

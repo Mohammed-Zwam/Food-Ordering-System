@@ -25,6 +25,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -59,15 +60,16 @@ public class RestaurantController implements Initializable {
         lblWelcome.setText("Welcome, " + restaurant.getUserName());
         String imgPath = restaurant.getUserImgPath();
 
-        if (imgPath != "null" && !imgPath.isEmpty() && !imgPath.equalsIgnoreCase("default")) {
-            try {
-                var imageStream = getClass().getResourceAsStream(imgPath);
-                if (imageStream != null) {
-                    Image image = new Image(imageStream);
-                }
-            } catch (Exception e) {
-                System.out.println("Error loading profile image: " + e.getMessage());
-            }
+        if (imgPath != null &&
+                !imgPath.equalsIgnoreCase("null") &&
+                !imgPath.equalsIgnoreCase("default")) {
+
+            Image image = new Image(
+                    Objects.requireNonNull(
+                            getClass().getResourceAsStream(imgPath)
+                    )
+            );
+            profileImage.setImage(image);
         }
     }
 

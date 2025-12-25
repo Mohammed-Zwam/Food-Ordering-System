@@ -33,6 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -60,42 +61,31 @@ public class CustomerController implements Initializable {
     @FXML
     private ComboBox<String> cmbDeliveryTime;
 
-    private Menu menu;
     private List<FoodItem> allItems;
+    private final Map<FoodItem, HBox> itemCards = new HashMap<>();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                loadMenuDataForCustomer();
-                return null;
-            }
-        };
-
-        task.setOnSucceeded(event -> {
-            renderItems(allItems);
-            System.out.println("RENDER 1");
-            // SET EVENTS HERE TO PREVENT MULTIPLE INVOKE WHEN SETUP ComboBox |  # ASHRAF ;)
-            cmbLocation.setOnAction(null);
-            cmbRating.setOnAction(null);
-            cmbDeliveryTime.setOnAction(null);
-            setupLocationFilter();
-            cmbDeliveryTime.setOnAction(this::onDeliveryTimeFilter);
-            cmbLocation.setOnAction(this::onLocationFilter);
-            cmbRating.setOnAction(this::onRatingFilter);
-        });
+        loadMenuDataForCustomer();
+        renderItems(allItems);
+        // SET EVENTS HERE TO PREVENT MULTIPLE INVOKE WHEN SETUP ComboBox |  # ASHRAF ;)
+        cmbLocation.setOnAction(null);
+        cmbRating.setOnAction(null);
+        cmbDeliveryTime.setOnAction(null);
+        setupLocationFilter();
+        cmbDeliveryTime.setOnAction(this::onDeliveryTimeFilter);
+        cmbLocation.setOnAction(this::onLocationFilter);
+        cmbRating.setOnAction(this::onRatingFilter);
         setCustomerInfo();
         loadCartMenu();
         FoodCardController.setParentController(this);
         CartCardController.setParentController(this);
-        new Thread(task).start();
     }
 
 
     private void setCustomerInfo() {
-        userName.setText(customer.getUserName());
+        userName.setText("Welcome, " + customer.getUserName());
         if (!(customer.getUserImgPath() == null || customer.getUserImgPath().equalsIgnoreCase("default"))) {
             Image image = new Image(
                     Objects.requireNonNull(getClass().getResourceAsStream(customer.getUserImgPath()))
@@ -104,8 +94,9 @@ public class CustomerController implements Initializable {
         }
     }
 
+
     private void loadMenuDataForCustomer() {
-        menu = CustomerRepo.findAllFoodItems();
+        Menu menu = CustomerRepo.findAllFoodItems();
         allItems = extractAllItems(menu);
     }
 
@@ -125,8 +116,9 @@ public class CustomerController implements Initializable {
     }
 
     private void renderItems(List<FoodItem> items) {
-        System.out.println(">>>>>>>>>>>>>>>> :( :::::::::::::::::::::");
         menuFlowPane.getChildren().clear();
+        itemCards.clear();
+
         for (FoodItem item : items) {
             try {
                 FXMLLoader loader = new FXMLLoader(
@@ -138,6 +130,7 @@ public class CustomerController implements Initializable {
                 FoodCardController controller = loader.getController();
                 controller.setData(item);
 
+                itemCards.put(item, card);
                 menuFlowPane.getChildren().add(card);
 
             } catch (IOException e) {
@@ -146,28 +139,64 @@ public class CustomerController implements Initializable {
         }
     }
 
+
     @FXML
     private void onSearch() {
         String keyword = InputParser.toString(txtSearch).toLowerCase().trim();
 
-        if (keyword.isEmpty()) {
-            renderItems(allItems);
-            return;
+        for (Map.Entry<FoodItem, HBox> entry : itemCards.entrySet()) {
+            FoodItem item = entry.getKey();
+            HBox card = entry.getValue();
+
+            boolean match = keyword.isEmpty()
+                    || item.getName().toLowerCase().contains(keyword)
+                    || item.getRestaurantName().toLowerCase().contains(keyword)
+                    || item.getDescription().toLowerCase().contains(keyword);
+
+            card.setVisible(match);
+            card.setManaged(match);
         }
-
-        List<FoodItem> filtered = new ArrayList<>();
-
-        for (FoodItem item : allItems) {
-            boolean match =
-                    item.getName().toLowerCase().contains(keyword) ||
-                            item.getRestaurantName().toLowerCase().contains(keyword) ||
-                            item.getDescription().toLowerCase().contains(keyword);
-
-            if (match) filtered.add(item);
-        }
-
-        renderItems(filtered);
     }
+
+    @FXML
+    private void onRatingFilter(ActionEvent event) {
+        String selected = cmbRating.getValue();
+        if (selected == null) return;
+
+        Integer rating = null;
+        if (!selected.equals("All Ratings")) {
+            rating = selected.length();
+        }
+
+        for (Map.Entry<FoodItem, HBox> entry : itemCards.entrySet()) {
+            FoodItem item = entry.getKey();
+            HBox card = entry.getValue();
+
+            boolean match = (rating == null)
+                    || (int) item.getRating() == rating;
+
+            card.setVisible(match);
+            card.setManaged(match);
+        }
+    }
+
+    @FXML
+    private void onLocationFilter(ActionEvent event) {
+        String selected = cmbLocation.getValue();
+        if (selected == null) return;
+
+        for (Map.Entry<FoodItem, HBox> entry : itemCards.entrySet()) {
+            FoodItem item = entry.getKey();
+            HBox card = entry.getValue();
+
+            boolean match = selected.equals("All Locations")
+                    || item.getLocation().equalsIgnoreCase(selected);
+
+            card.setVisible(match);
+            card.setManaged(match);
+        }
+    }
+
 
     @FXML
     private void logout(ActionEvent event) {
@@ -176,54 +205,11 @@ public class CustomerController implements Initializable {
     }
 
 
-    @FXML
-    private void onRatingFilter(ActionEvent event) {
-        String selected = cmbRating.getValue();
-        if (selected == null) return;
-
-        if (selected.equals("All Ratings")) {
-            renderItems(allItems);
-            return;
-        }
-
-        int rating = selected.length();
-
-        List<FoodItem> filtered = new ArrayList<>();
-        for (FoodItem item : allItems) {
-            if ((int) item.getRating() == rating) {
-                filtered.add(item);
-            }
-        }
-
-        renderItems(filtered);
-    }
-
     private void setupLocationFilter() {
         cmbLocation.getItems().clear();
         cmbLocation.getItems().add("All Locations");
         cmbLocation.getItems().addAll(Locations.ZONES);
         cmbLocation.setValue("All Locations");
-    }
-
-
-    @FXML
-    private void onLocationFilter(ActionEvent event) {
-        String selected = cmbLocation.getValue();
-        if (selected == null) return;
-
-        if (selected.equals("All Locations")) {
-            renderItems(allItems);
-            return;
-        }
-
-        List<FoodItem> filtered = new ArrayList<>();
-        for (FoodItem item : allItems) {
-            if (item.getLocation().equalsIgnoreCase(selected)) {
-                filtered.add(item);
-            }
-        }
-
-        renderItems(filtered);
     }
 
 
@@ -317,33 +303,45 @@ public class CustomerController implements Initializable {
         ViewHandler.changeView(stage, "customer-views/customer-orders-view");
     }
 
+    @FXML
     private void onDeliveryTimeFilter(ActionEvent event) {
         String selected = cmbDeliveryTime.getValue();
-        if (selected == null || selected.equals("All")) {
-            renderItems(allItems);
-            return;
-        }
+        if (selected == null) return;
 
-        double maxTime = switch (selected) {
-            case "≤ 10 min" -> 10;
-            case "≤ 15 min" -> 15;
-            case "≤ 30 min" -> 30;
-            case "≤ 45 min" -> 45;
-            case "≤ 60 min" -> 60;
-            default -> Double.MAX_VALUE;
-        };
+        Double maxTime = null;
+        boolean greaterThan60 = false;
 
-        List<FoodItem> filtered = new ArrayList<>();
-
-        for (FoodItem item : allItems) {
-            double time = DeliveryTimeService.getDeliveryTimeInMinutes(customer.getZone(), item.getLocation());
-            if (selected.equals("> 60 min")) {
-                if (time > 60) filtered.add(item);
-            } else {
-                if (time <= maxTime) filtered.add(item);
+        if (!selected.equals("All")) {
+            switch (selected) {
+                case "≤ 10 min" -> maxTime = 10.0;
+                case "≤ 15 min" -> maxTime = 15.0;
+                case "≤ 30 min" -> maxTime = 30.0;
+                case "≤ 45 min" -> maxTime = 45.0;
+                case "≤ 60 min" -> maxTime = 60.0;
+                case "> 60 min" -> greaterThan60 = true;
             }
         }
 
-        renderItems(filtered);
+        for (Map.Entry<FoodItem, HBox> entry : itemCards.entrySet()) {
+            FoodItem item = entry.getKey();
+            HBox card = entry.getValue();
+
+            boolean match;
+
+            if (selected.equals("All")) {
+                match = true;
+            } else {
+                double time = DeliveryTimeService
+                        .getDeliveryTimeInMinutes(customer.getZone(), item.getLocation());
+
+                match = greaterThan60
+                        ? time > 60
+                        : time <= maxTime;
+            }
+
+            card.setVisible(match);
+            card.setManaged(match);
+        }
     }
+
 }

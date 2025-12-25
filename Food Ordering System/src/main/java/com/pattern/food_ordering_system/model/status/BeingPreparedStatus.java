@@ -9,6 +9,7 @@ public class BeingPreparedStatus extends Status {
 
     @Override
     public void nextStatus(Order order) {
-        order.setOrderStatus(StatusFactory.getOrderStatusObj(OrderStatus.READY_FOR_DELIVERY));
+        Status orderStatus = StatusFactory.getOrderStatusObj(OrderStatus.READY_FOR_DELIVERY);
+        order.setOrderStatus(orderStatus);
     }
 }

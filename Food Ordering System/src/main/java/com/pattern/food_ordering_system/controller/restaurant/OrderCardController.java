@@ -29,15 +29,6 @@ public class OrderCardController {
     @FXML
     private Button changeStatusBtn;
 
-    private final String acceptButtonStyle = "-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12; -fx-cursor: hand;";
-    private final String markReadyButtonStyle = "-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12; -fx-cursor: hand;";
-    private final String outForDeliveryButtonStyle = "-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12; -fx-cursor: hand;";
-    private final String viewCustomerRateButtonStyle = "-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12; -fx-cursor: hand;";
-    private final String orderPlacedLabelStyle = "-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #FFF9C4; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;";
-    private final String confirmedLabelStyle = "-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #FFCC80; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;";
-    private final String beingPreparedLabelStyle = "-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #E3F2FD; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;";
-    private final String completedLabelStyle = "-fx-text-fill: #2E7D32; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #E8F5E9; -fx-border-color: #B3FCC0; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;";
-
 
     public void setOrderData(RestaurantOrder order) {
         this.order = order;
@@ -60,6 +51,16 @@ public class OrderCardController {
 
 
     public void setOrderStatus() {
+        String acceptButtonStyle = "-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12; -fx-cursor: hand;";
+        String markReadyButtonStyle = "-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12; -fx-cursor: hand;";
+        String outForDeliveryButtonStyle = "-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12; -fx-cursor: hand;";
+        String viewCustomerRateButtonStyle = "-fx-background-color: yellow; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 12; -fx-cursor: hand;";
+        String orderPlacedLabelStyle = "-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #FFF9C4; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;";
+        String confirmedLabelStyle = "-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #FFCC80; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;";
+        String beingPreparedLabelStyle = "-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #E3F2FD; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;";
+        String completedLabelStyle = "-fx-text-fill: #2E7D32; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #E8F5E9; -fx-border-color: #B3FCC0; -fx-border-radius: 20; -fx-background-radius: 15; -fx-padding: 5 10;";
+
+
         OrderStatus status = order.getOrderStatus().getCurrentStatus();
         switch (status) {
             case OrderStatus.ORDER_PLACED -> {
@@ -77,7 +78,7 @@ public class OrderCardController {
                 statusLabel.setStyle(beingPreparedLabelStyle);
                 changeStatusBtn.setStyle(outForDeliveryButtonStyle);
                 changeStatusBtn.setText("Ready For Delivery");
-                statusLabel.setText("Bing Prepared");
+                statusLabel.setText("Being Prepared");
             }
 
             default -> {

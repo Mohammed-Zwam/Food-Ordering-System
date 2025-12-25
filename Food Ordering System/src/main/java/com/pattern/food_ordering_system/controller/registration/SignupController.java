@@ -2,6 +2,7 @@ package com.pattern.food_ordering_system.controller.registration;
 
 import com.pattern.food_ordering_system.service.user.UserService;
 import com.pattern.food_ordering_system.utils.AlertHandler;
+import com.pattern.food_ordering_system.utils.Locations;
 import com.pattern.food_ordering_system.utils.ViewHandler;
 import com.pattern.food_ordering_system.validatorMW.InputValidator;
 import javafx.collections.FXCollections;
@@ -54,17 +55,15 @@ public class SignupController {
         deliveryRadio.setToggleGroup(accountTypeGroup);
 
         // Load Zones
-        ObservableList<String> zones = FXCollections.observableArrayList(
-                "El Marg", "Tagammu", "Abbasiya", "Ain Shams"
-        );
-        zoneCombo.setItems(zones);
+        zoneCombo.getItems().clear();
+        zoneCombo.getItems().addAll(Locations.ZONES);
 
         // Upload Image Event Handler
         uploadButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select Logo/Image");
             fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.webp")
             );
             Stage stage = (Stage) uploadButton.getScene().getWindow();
             File file = fileChooser.showOpenDialog(stage);
@@ -105,7 +104,7 @@ public class SignupController {
                 userName.getText(),
                 password.getText(),
                 zoneCombo.getValue(),
-                ((RadioButton)accountTypeGroup.getSelectedToggle()).getText(),
+                ((RadioButton) accountTypeGroup.getSelectedToggle()).getText(),
                 phoneNumber.getText(),
                 profileImage
         );

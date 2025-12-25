@@ -24,7 +24,7 @@ public class DeliveryOrderCardController {
         lblCustomerName.setText("👤 " + order.getCustomerName());
         lblAddress.setText("📍 " + order.getDeliveryAddress());
         lblPrice.setText(String.format("%.2f EGP", order.getTotalPrice()));
-        lblDeliveryFee.setText(String.format("🛵 Fee: %.2f", order.getDeliveryFee()));
+        lblDeliveryFee.setText(String.format("Fee: %.2f", order.getDeliveryFee()));
 
         if (order.getPaymentMethod() != null)
             lblPaymentMethod.setText(order.getPaymentMethod().getDisplayName());
@@ -36,12 +36,12 @@ public class DeliveryOrderCardController {
 
     private void updateButtonState() {
         if (currentOrder.getStatus() == OrderStatus.READY_FOR_DELIVERY) {
-            btnAction.setText("📦 Pickup Order");
-            btnAction.setStyle("-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;");
+            btnAction.setText("Pickup Order");
+            btnAction.setStyle("-fx-background-color: #1E88E5; -fx-text-fill: white;-fx-font-size: 15; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;");
             btnAction.setOnAction(e -> handlePickup());
         } else if (currentOrder.getStatus() == OrderStatus.OUT_FOR_DELIVERY) {
             btnAction.setText("✅ Mark Delivered");
-            btnAction.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;");
+            btnAction.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 8;-fx-font-size: 15; -fx-font-weight: bold; -fx-cursor: hand;");
             btnAction.setOnAction(e -> handleComplete());
         }
     }

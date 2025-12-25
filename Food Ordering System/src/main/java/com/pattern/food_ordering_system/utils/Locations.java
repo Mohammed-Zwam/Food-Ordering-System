@@ -61,9 +61,6 @@ public class Locations {
                 }
                 deliveryTimeCache.put(from, toMap);
             }
-
-            System.out.println("Delivery times loaded: " + deliveryTimeCache.size() + " zones");
-
         } catch (Exception e) {
             e.printStackTrace();
         }

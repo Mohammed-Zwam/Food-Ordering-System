@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -87,12 +88,16 @@ public class DeliveryController implements Initializable {
 
     private void setDriverInfo() {
         lblWelcome.setText("Welcome, " + driver.getUserName());
-        if (!(driver.getUserImgPath() == null || driver.getUserImgPath().equalsIgnoreCase("default"))) {
-            try {
-                Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(driver.getUserImgPath())));
+        String imgPath = driver.getUserImgPath();
+        if (imgPath != null
+                && !imgPath.equalsIgnoreCase("default")
+                && !imgPath.equalsIgnoreCase("null")) {
+
+            File file = new File(imgPath);
+
+            if (file.exists()) {
+                Image image = new Image(file.toURI().toString());
                 profileImage.setImage(image);
-            } catch (Exception e) {
-                System.out.println("Error loading profile image: " + e.getMessage());
             }
         }
     }

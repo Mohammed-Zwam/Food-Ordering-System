@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane style="-fx-background-color: #F4F8FF;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pattern.food_ordering_system.controller.delivery.DeliveryController">
+<BorderPane prefHeight="1312.0" prefWidth="1921.0" style="-fx-background-color: #F4F8FF;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pattern.food_ordering_system.controller.delivery.DeliveryController">
 
     <top>
         <HBox alignment="CENTER_LEFT" prefHeight="70.0" spacing="20" style="-fx-background-color: #FFFFFF; -fx-border-color: #D0D8E8; -fx-border-width: 0 0 1 0; -fx-padding: 5 20;">
@@ -34,7 +34,7 @@
                             <VBox alignment="CENTER_LEFT">
                                 <children>
                                     <Label fx:id="lblWelcome" style="-fx-font-family: 'Poppins'; -fx-font-size: 16px; -fx-text-fill: #415A77; -fx-font-weight: bold;" text="Captain Name" />
-                                    <Label style="-fx-font-family: 'Poppins'; -fx-font-size: 12px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Active Driver 🟢" />
+                                    <Label style="-fx-font-family: 'Poppins'; -fx-font-size: 12px; -fx-text-fill: #777; -fx-font-weight: bold;" text="Welcome Back 👋" />
                                 </children>
                             </VBox>
                         </children>
@@ -45,7 +45,7 @@
     </top>
 
     <center>
-        <HBox spacing="20" style="-fx-padding: 20;">
+        <HBox prefHeight="1810.0" prefWidth="1894.0" spacing="20" style="-fx-padding: 20;">
             <VBox spacing="10" HBox.hgrow="ALWAYS">
 
                 <HBox alignment="CENTER_LEFT" prefHeight="60.0">
