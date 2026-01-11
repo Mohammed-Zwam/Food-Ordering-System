@@ -1,4 +1,4 @@
-module com.example.food_ordering_system {
+module com.pattern.food_ordering_system {
     requires javafx.controls;
     requires javafx.fxml;
     requires org.controlsfx.controls;

@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class CustomerController implements Initializable {
@@ -63,33 +64,36 @@ public class CustomerController implements Initializable {
 
     private List<FoodItem> allItems;
     private final Map<FoodItem, HBox> itemCards = new HashMap<>();
+     final Map<CartItem, HBox> cartItems = new HashMap<>();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadMenuDataForCustomer();
-        renderItems(allItems);
+        if (itemCards.isEmpty()) foodItemsSetup();
+        setCustomerInfo();
+        FoodCardController.setParentController(this);
+        CartCardController.setParentController(this);
         // SET EVENTS HERE TO PREVENT MULTIPLE INVOKE WHEN SETUP ComboBox |  # ASHRAF ;)
         cmbLocation.setOnAction(null);
         cmbRating.setOnAction(null);
         cmbDeliveryTime.setOnAction(null);
-        setupLocationFilter();
+        setupFilters();
         cmbDeliveryTime.setOnAction(this::onDeliveryTimeFilter);
         cmbLocation.setOnAction(this::onLocationFilter);
         cmbRating.setOnAction(this::onRatingFilter);
-        setCustomerInfo();
-        loadCartMenu();
-        FoodCardController.setParentController(this);
-        CartCardController.setParentController(this);
     }
 
+    private void foodItemsSetup() {
+        loadMenuDataForCustomer();
+        loadCartMenu();
+        setCartInfo();
+        renderItems(allItems);
+    }
 
     private void setCustomerInfo() {
         userName.setText("Welcome, " + customer.getUserName());
         if (!(customer.getUserImgPath() == null || customer.getUserImgPath().equalsIgnoreCase("default"))) {
-            Image image = new Image(
-                    Objects.requireNonNull(getClass().getResourceAsStream(customer.getUserImgPath()))
-            );
+            Image image = new Image(Paths.get(System.getProperty("user.dir") + customer.getUserImgPath()).toUri().toString());
             profileImage.setImage(image);
         }
     }
@@ -138,7 +142,6 @@ public class CustomerController implements Initializable {
             }
         }
     }
-
 
     @FXML
     private void onSearch() {
@@ -197,21 +200,20 @@ public class CustomerController implements Initializable {
         }
     }
 
-
     @FXML
     private void logout(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         ViewHandler.changeView(stage, "registration-views/login-view");
     }
 
-
-    private void setupLocationFilter() {
+    private void setupFilters() {
         cmbLocation.getItems().clear();
         cmbLocation.getItems().add("All Locations");
         cmbLocation.getItems().addAll(Locations.ZONES);
         cmbLocation.setValue("All Locations");
+        cmbDeliveryTime.setValue("All Delivery Times");
+        cmbRating.setValue("All Ratings");
     }
-
 
     @FXML
     void refreshMenu() {
@@ -228,6 +230,7 @@ public class CustomerController implements Initializable {
 
         task.setOnSucceeded(event -> {
             initialize(null, null);
+            foodItemsSetup();
             refreshBtn.setText("\uD83D\uDD04 Refresh");
             refreshBtn.setDisable(false);
         });
@@ -236,7 +239,7 @@ public class CustomerController implements Initializable {
 
     public void loadCartMenu() {
         isEmptyCart(customer.getCart().isEmpty());
-
+        cartItems.clear();
         cartFlowPane.getChildren().clear();
 
         for (CartItem item : customer.getCart().getCartItems()) {
@@ -247,6 +250,7 @@ public class CustomerController implements Initializable {
                 );
 
                 HBox card = loader.load();
+                cartItems.put(item, card);
                 CartCardController controller = loader.getController();
                 controller.setData(item);
                 cartFlowPane.getChildren().add(card);
@@ -255,8 +259,19 @@ public class CustomerController implements Initializable {
                 e.printStackTrace();
             }
         }
+    }
+
+    void updateCart() {
+        isEmptyCart(customer.getCart().isEmpty());
+        cartFlowPane.getChildren().clear();
+        for (HBox card : cartItems.values()) {
+            cartFlowPane.getChildren().add(card);
+        }
+        setCartInfo();
+    }
 
 
+    void setCartInfo() {
         this.cartItemsCounter.setText(Integer.toString(customer.getCart().getCartItems().size())); // number of items in cart
         this.totalPrice.setText(customer.getCart().getTotalPrice() + " EGP"); // total price
         this.restaurantName.setText(customer.getCart().getRestaurantName()); // set restaurant name
@@ -311,7 +326,7 @@ public class CustomerController implements Initializable {
         Double maxTime = null;
         boolean greaterThan60 = false;
 
-        if (!selected.equals("All")) {
+        if (!selected.equals("All Delivery Times")) {
             switch (selected) {
                 case "≤ 10 min" -> maxTime = 10.0;
                 case "≤ 15 min" -> maxTime = 15.0;
@@ -328,7 +343,7 @@ public class CustomerController implements Initializable {
 
             boolean match;
 
-            if (selected.equals("All")) {
+            if (selected.equals("All Delivery Times")) {
                 match = true;
             } else {
                 double time = DeliveryTimeService

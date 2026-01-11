@@ -10,6 +10,7 @@ public class Cart implements ICart {
     private double totalPrice = 0;
     private Long restaurantId;
     private String restaurantName;
+    private String restaurantLogo;
 
 
     @Override
@@ -17,6 +18,7 @@ public class Cart implements ICart {
         if (cartItems.isEmpty()) {
             this.restaurantId = foodItem.getRestaurantId();
             this.restaurantName = foodItem.getRestaurantName();
+            this.restaurantLogo = foodItem.getRestaurantLogo();
         }
         if (change == 0) {
             CartItem cartItem = cartItems.get(foodItem.getId());
@@ -92,5 +94,13 @@ public class Cart implements ICart {
         CartItem cart = cartItems.values().iterator().next(); // return first cart item
         this.restaurantId = cart.getFoodItem().getRestaurantId();
         this.restaurantName = cart.getFoodItem().getRestaurantName();
+    }
+
+    public String getRestaurantLogo() {
+        return restaurantLogo;
+    }
+
+    public void setRestaurantLogo(String restaurantLogo) {
+        this.restaurantLogo = restaurantLogo;
     }
 }

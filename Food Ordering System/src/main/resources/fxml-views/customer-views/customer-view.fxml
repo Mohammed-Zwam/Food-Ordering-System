@@ -60,16 +60,16 @@
                     <HBox alignment="CENTER" prefHeight="6.0" prefWidth="907.0">
                         <HBox alignment="CENTER" prefHeight="38.0" spacing="10.0">
                             <children>
-                                <TextField fx:id="txtSearch" focusTraversable="false" prefHeight="38.0" prefWidth="240.0" promptText="🔍 Search ..." style="-fx-background-radius: 50; -fx-padding: 10 20;" />
-                                <Button onAction="#onSearch" prefHeight="33.0" prefWidth="73.0" style="-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 14; -fx-padding: 6;" text="Search" />
+                                <TextField onTextChange="#onSearch" fx:id="txtSearch" focusTraversable="false" prefHeight="38.0" prefWidth="240.0" promptText="🔍 Search ..." style="-fx-background-radius: 50; -fx-padding: 10 20;" />
                             </children>
                         </HBox>
 
                         <Region prefHeight="38.0" HBox.hgrow="ALWAYS" />
                         <HBox alignment="CENTER" prefHeight="38.0" spacing="20.0">
-                            <ComboBox fx:id="cmbDeliveryTime" focusTraversable="false" prefHeight="26.0" prefWidth="130.0" promptText="⏱ Delivery Time">
+                            <ComboBox fx:id="cmbDeliveryTime" focusTraversable="false" prefHeight="26.0" promptText="⏱ Delivery Time">
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="All Delivery Times" />
                                         <String fx:value="≤ 10 min" />
                                         <String fx:value="≤ 15 min" />
                                         <String fx:value="≤ 30 min" />
@@ -79,9 +79,10 @@
                                     </FXCollections>
                                 </items>
                             </ComboBox>
-                            <ComboBox fx:id="cmbRating" focusTraversable="false" prefWidth="130.0" promptText="⭐ Rating">
+                            <ComboBox fx:id="cmbRating" focusTraversable="false" promptText="⭐ Rating">
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="All Ratings" />
                                         <String fx:value="⭐" />
                                         <String fx:value="⭐⭐" />
                                         <String fx:value="⭐⭐⭐" />
@@ -91,7 +92,7 @@
                                 </items>
                             </ComboBox>
 
-                            <ComboBox fx:id="cmbLocation" focusTraversable="false" prefWidth="130.0" promptText="📍 Location" />
+                            <ComboBox fx:id="cmbLocation" focusTraversable="false" promptText="📍 Location" />
                         </HBox>
                     </HBox>
                 </VBox>

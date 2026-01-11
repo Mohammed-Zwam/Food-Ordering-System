@@ -21,8 +21,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -47,28 +49,17 @@ public class CustomerOrdersController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Task<List<CustomerOrder>> task = new Task<>() {
-            @Override
-            protected List<CustomerOrder> call() throws Exception {
-                return customer.getOrders();
-            }
-        };
-
-        task.setOnSucceeded(event -> {
-            List<CustomerOrder> orders = task.getValue();
-            renderOrders(orders);
-        });
         isEmptyPage(customer.getOrders().isEmpty());
         setCustomerInfo();
-        new Thread(task).start();
+        List<CustomerOrder> orders = customer.getOrders();
+        renderOrders(orders);
     }
 
     private void setCustomerInfo() {
         userName.setText("Welcome, " + customer.getUserName());
         if (!(customer.getUserImgPath() == null || customer.getUserImgPath().equalsIgnoreCase("default"))) {
-            Image image = new Image(
-                    Objects.requireNonNull(getClass().getResourceAsStream(customer.getUserImgPath()))
-            );
+            Image image = new Image(Paths.get(System.getProperty("user.dir") + customer.getUserImgPath()).toUri().toString());
+
             profileImage.setImage(image);
         }
     }

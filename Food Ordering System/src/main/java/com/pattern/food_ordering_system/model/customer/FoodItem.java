@@ -5,6 +5,7 @@ import com.pattern.food_ordering_system.entity.MenuItem;
 public class FoodItem extends MenuItem {
     private String restaurantName;
     private long restaurantId;
+    private String restaurantLogo;
     private double rating;
     private String category;
     private String location;
@@ -43,5 +44,13 @@ public class FoodItem extends MenuItem {
 
     public void setRestaurantId(long restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public String getRestaurantLogo() {
+        return restaurantLogo;
+    }
+
+    public void setRestaurantLogo(String restaurantLogo) {
+        this.restaurantLogo = restaurantLogo;
     }
 }

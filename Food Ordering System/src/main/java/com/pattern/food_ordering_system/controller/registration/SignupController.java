@@ -77,6 +77,7 @@ public class SignupController {
     @FXML
     private void handleLoginNavigation(MouseEvent event) {
         try {
+            clearForm();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             ViewHandler.changeView(stage, "registration-views/login-view");
         } catch (Exception e) {
@@ -111,8 +112,30 @@ public class SignupController {
 
         AlertHandler.showInfo("Registration Complete", result);
         if (result == "Account Created Successfully") {
+            clearForm();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             ViewHandler.changeView(stage, "registration-views/login-view");
+        }
+    }
+    private void clearForm () {
+        if (accountTypeGroup != null) {
+            accountTypeGroup.selectToggle(null);
+        }
+
+        if (zoneCombo != null) {
+            zoneCombo.getSelectionModel().clearSelection();
+        }
+
+        if (userName != null) userName.clear();
+        if (phoneNumber != null) phoneNumber.clear();
+
+        if (password != null) password.clear();
+        if (confirmPassword != null) confirmPassword.clear();
+
+        if (profileImage != null) {
+            profileImage.setImage(
+                    new Image(getClass().getResource("/assets/user-icon-SYS.png").toExternalForm())
+            );
         }
     }
 }

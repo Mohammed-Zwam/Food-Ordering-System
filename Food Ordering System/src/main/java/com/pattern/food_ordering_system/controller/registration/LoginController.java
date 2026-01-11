@@ -45,6 +45,8 @@ public class LoginController {
         };
 
         loginTask.setOnSucceeded(e -> {
+            userName.setText("");
+            password.setText("");
             ViewHandler.changeView(stage, loginTask.getValue());
             isLoading(false);
         });
@@ -65,6 +67,8 @@ public class LoginController {
     @FXML
     private void handleSignUpNavigation(MouseEvent event) {
         try {
+            userName.setText("");
+            password.setText("");
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             ViewHandler.changeView(stage, "registration-views/signup-view");
         } catch (Exception e) {

@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -63,12 +64,9 @@ public class RestaurantController implements Initializable {
         if (imgPath != null &&
                 !imgPath.equalsIgnoreCase("null") &&
                 !imgPath.equalsIgnoreCase("default")) {
-
-            Image image = new Image(
-                    Objects.requireNonNull(
-                            getClass().getResourceAsStream(imgPath)
-                    )
-            );
+            Image image = new Image(Paths.get(System.getProperty("user.dir") + imgPath).toUri().toString());
+            System.out.println(System.getProperty("user.dir") + imgPath);
+            System.out.println(image);
             profileImage.setImage(image);
         }
     }

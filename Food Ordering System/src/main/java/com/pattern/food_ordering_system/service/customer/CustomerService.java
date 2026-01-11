@@ -18,13 +18,14 @@ import java.util.List;
 public class CustomerService {
     private static final Customer customer = (Customer) UserFactory.getUser();
 
-    public static void updateCartItem(FoodItem foodItem, int change, int oldQuantity /* FOR ROLLBACK */) throws CartException {
+    public static int updateCartItem(FoodItem foodItem, int change, int oldQuantity /* FOR ROLLBACK */) throws CartException {
         CartProxy cartProxy = new CartProxy(customer.getCart());
         change = cartProxy.updateCartItem(foodItem, change);  // Update local cart
         try {
             // Update DB
             if (change == 0) CustomerRepo.deleteCartItemByFoodIdAndCustomerId(foodItem.getId(), customer.getId());
             else CustomerRepo.updateCartItem(customer.getId(), foodItem.getId(), change);
+            return change;
         } catch (SQLException e) {
             customer.getCart().setCartItemQuantity(foodItem.getId(), oldQuantity); // rollback <real system ;)>
             throw new CartException("Failed To Update DB");
@@ -63,6 +64,7 @@ public class CustomerService {
             order.setRestaurantId(cart.getRestaurantId());
             order.setItems(orderItems);
             order.setPaymentMethod(paymentMethod);
+            order.setRestaurantLogo(customer.getCart().getRestaurantLogo());
             order.setDeliveryAddress(address);
             order.setRestaurantName(cart.getRestaurantName());
             order.setOrderPrice(cart.getTotalPrice());

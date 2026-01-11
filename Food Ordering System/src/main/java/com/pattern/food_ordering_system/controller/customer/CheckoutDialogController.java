@@ -108,10 +108,8 @@ public class CheckoutDialogController {
             }
             CustomerService.createOrder(address, method, totalPriceWithFee);
             CustomerService.clearCart();
-
-            if (parentController != null) {
-                parentController.loadCartMenu();
-            }
+            parentController.cartItems.clear();
+            parentController.updateCart();
 
             AlertHandler.showInfo("Success", "Order placed successfully!");
             closeDialog();

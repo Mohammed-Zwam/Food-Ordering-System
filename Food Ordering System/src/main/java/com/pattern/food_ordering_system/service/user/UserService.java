@@ -33,10 +33,9 @@ public class UserService {
                 String imageName = url.substring(url.lastIndexOf('/') + 1); // get image name
                 if (!imageName.equals("user-icon-SYS.png")) {
                     imagePath = HandleUploading.upload(logoPreview, imageName);
-                    imagePath = "/users-images/" + imagePath;
+                    imagePath = "\\src\\main\\resources\\users-images\\" + imagePath;
                 }
             }
-
             if (UserRepo.save(username, password, zone, role, phoneNumber, imagePath))
                 return "Account Created Successfully";
             return "Account creation failed. Please try again.";

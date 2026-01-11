@@ -1,0 +1,24 @@
+case1:
+
+name : Tahrer
+phonenumber : 01147244419
+photo :       "D:\PROGRAMMING\PROJECTS\Java Backend Track\Food-Ordering-System (Desing Pattern Project)\Assets\restaurant images\Tahrer.jpeg"
+
+
+
+
+
+case :
+كشري
+https://static.zyda.com/photos/restaurants/photo_urls/4160/original/cover-01_%281%29.jpg?1654090587
+
+طواجن
+مكورنه بلحمه المفرومه
+https://www.masrtimes.com/UploadCache/libfiles/49/0/600x338o/673.jpg
+
+حلويات 
+ام علي
+https://mklat.com/wp-content/uploads/%D8%B7%D8%A7%D8%AC%D9%86-%D8%A3%D9%85-%D8%B9%D9%84%D9%8A.jpeg
+
+رز بلبن
+https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAfXae0e06zl5yAXXgYM4tTl-Azj3hS9FR4Q&s

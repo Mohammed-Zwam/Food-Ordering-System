@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -93,8 +94,8 @@ public class RestaurantOrdersController implements Initializable {
         userName.setText("Welcome, " + restaurant.getUserName());
         if (!(restaurant.getUserImgPath() == null || restaurant.getUserImgPath().equals("default") || restaurant.getUserImgPath().equals("null"))) {
             try {
-                Image imageFile = new Image(Objects.requireNonNull(RestaurantController.class.getResourceAsStream(restaurant.getUserImgPath())));
-                profileImage.setImage(imageFile);
+                Image image = new Image(Paths.get(System.getProperty("user.dir") + restaurant.getUserImgPath()).toUri().toString());
+                profileImage.setImage(image);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

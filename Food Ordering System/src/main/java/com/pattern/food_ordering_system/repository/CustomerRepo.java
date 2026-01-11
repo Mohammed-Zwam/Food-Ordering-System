@@ -23,14 +23,17 @@ public class CustomerRepo {
                            user.username AS restaurant_name, 
                            user.user_id AS restaurant_id, 
                            user.zone AS restaurant_zone,
-                           rest.rate AS restaurant_rate
+                           rest.rate AS restaurant_rate,
+                           user.image_path AS restaurant_logo
                     FROM menus food_item
                     JOIN users user
                         ON food_item.restaurant_id = user.user_id
                     JOIN restaurants rest
                         ON food_item.restaurant_id = rest.restaurant_id
                     WHERE food_item.availability = 1
+                    ORDER BY food_item.food_item_id DESC
                 """;
+
 
         try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -49,6 +52,7 @@ public class CustomerRepo {
                 foodItem.setRestaurantName(rs.getString("restaurant_name"));
                 foodItem.setRating(rs.getDouble("restaurant_rate"));
                 foodItem.setLocation(rs.getString("restaurant_zone"));
+                foodItem.setRestaurantLogo(rs.getString("restaurant_logo"));
 
                 menu.add(foodItem);
             }
@@ -173,6 +177,7 @@ public class CustomerRepo {
             clearCartByCustomerId(order.getCustomerId());
         }
     }
+
     private static void insertOrderItems(CustomerOrder order) throws SQLException {
         String itemSql = """
                     INSERT INTO order_items (order_id, food_item_id, quantity, price)

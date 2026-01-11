@@ -12,6 +12,7 @@ public class CustomerOrder extends Order {
     private double totalPriceWithFee;
     private Review review;
 
+
     public long getCustomerId() {
         return customerId;
     }

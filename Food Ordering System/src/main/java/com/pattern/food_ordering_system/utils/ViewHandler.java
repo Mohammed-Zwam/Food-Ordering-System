@@ -14,7 +14,7 @@ import java.util.Map;
 public class ViewHandler {
     private static Scene mainScene;
     private static Map<String, ViewCacheEntry> cache = new HashMap<>();
-    private static String previousFXMLFile = "";
+    private static boolean isOld = true;
 
     public static void changeView(Stage stage, String fxmlFile) {
 
@@ -22,10 +22,12 @@ public class ViewHandler {
             ViewCacheEntry entry;
             if (cache.containsKey(fxmlFile)) {
                 entry = cache.get(fxmlFile);
+                isOld = true;
             } else {
                 FXMLLoader fxmlLoader = new FXMLLoader(ViewHandler.class.getResource("/fxml-views/" + fxmlFile + ".fxml"));
                 entry = new ViewCacheEntry(fxmlLoader.load(), fxmlLoader.getController());
                 cache.put(fxmlFile, entry);
+                isOld = false;
             }
 
             if (mainScene == null) {
@@ -35,20 +37,14 @@ public class ViewHandler {
                 mainScene.setRoot(entry.root);
             }
 
-            if (entry.controller instanceof Initializable && !fxmlFile.startsWith("customer-views/customer-view")) {
+            if (isOld && entry.controller instanceof Initializable) {
                 ((Initializable) entry.controller).initialize(null, null);
             }
-            previousFXMLFile = fxmlFile;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static boolean notSameDashboard(String currentFxml, String nextFxml) {
-        return !((currentFxml.startsWith("restaurant") && nextFxml.startsWith("restaurant")) ||
-                (currentFxml.startsWith("customer") && nextFxml.startsWith("customer")) ||
-                (currentFxml.startsWith("delivery") && nextFxml.startsWith("delivery")));
-    }
 
     private static class ViewCacheEntry {
         Parent root;

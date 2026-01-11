@@ -38,11 +38,11 @@ public class CartCardController {
         this.cartItem = cartItem;
         FoodItem foodItem = cartItem.getFoodItem();
         System.out.println();
-       try {
-           foodImageView.setImage(new Image(foodItem.getImagePath(), true));
-       } catch (Exception e) {
-           System.out.println(e.getMessage());
-       }
+        try {
+            foodImageView.setImage(new Image(foodItem.getImagePath(), true));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         foodNameLabel.setText(foodItem.getName());
         quantityLabel.setText(Integer.toString(cartItem.getQuantity()));
         price.setText(cartItem.getSubTotal() + " EGP");
@@ -93,8 +93,13 @@ public class CartCardController {
 
     private void handleCartItemActions(int change) {
         try {
-            CustomerService.updateCartItem(cartItem.getFoodItem(), change, cartItem.getQuantity());
-            parentController.loadCartMenu();
+            int newQty = CustomerService.updateCartItem(cartItem.getFoodItem(), change, cartItem.getQuantity());
+            if (newQty <= 0) {
+                parentController.cartItems.remove(cartItem);
+            }
+            quantityLabel.setText(Integer.toString(cartItem.getQuantity()));
+            price.setText(cartItem.getSubTotal() + " EGP");
+            parentController.updateCart();
         } catch (InvalidQuantityException e) {
             AlertHandler.showWarning("Failed Operation", e.getMessage());
         }

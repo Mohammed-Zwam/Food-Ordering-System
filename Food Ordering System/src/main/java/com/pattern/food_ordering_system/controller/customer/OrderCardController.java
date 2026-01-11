@@ -16,6 +16,7 @@ import com.pattern.food_ordering_system.repository.ReviewRepo;
 import com.pattern.food_ordering_system.model.user.UserFactory;
 import org.controlsfx.control.Rating;
 
+import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -51,9 +52,7 @@ public class OrderCardController {
 
         if (order.getItems() != null && !order.getItems().isEmpty()) {
             if (!(order.getRestaurantLogo() == null || order.getRestaurantLogo().equalsIgnoreCase("default"))) {
-                Image image = new Image(
-                        Objects.requireNonNull(getClass().getResourceAsStream(order.getRestaurantLogo()))
-                );
+                Image image = new Image(Paths.get(System.getProperty("user.dir") + order.getRestaurantLogo()).toUri().toString());
                 imgRestaurant.setImage(image);
             }
 

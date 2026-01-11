@@ -1,5 +1,6 @@
 package com.pattern.food_ordering_system.controller.customer;
 
+import com.pattern.food_ordering_system.entity.CartItem;
 import com.pattern.food_ordering_system.model.customer.CartProxy;
 import com.pattern.food_ordering_system.model.customer.FoodItem;
 import com.pattern.food_ordering_system.model.user.Customer;
@@ -10,11 +11,14 @@ import com.pattern.food_ordering_system.utils.exception.CartException;
 import com.pattern.food_ordering_system.utils.exception.InvalidQuantityException;
 import com.pattern.food_ordering_system.utils.exception.RestaurantMismatchException;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Locale;
 
@@ -67,17 +71,31 @@ public class FoodCardController {
     public void addFoodItemToCart() {
         try {
             CustomerService.updateCartItem(foodItem, 1, 0);
-            parentController.loadCartMenu();
+            Customer customer = (Customer) UserFactory.getUser();
+            CartItem cartItem = customer.getCart().getCartItemById(foodItem.getId());
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml-views/customer-views/cart-item-card.fxml")
+            );
+
+            HBox card = loader.load();
+            CartCardController controller = loader.getController();
+            controller.setData(cartItem);
+            parentController.cartItems.put(cartItem, card);
+            parentController.updateCart();
         } catch (RestaurantMismatchException e) {
             boolean confirm = AlertHandler.confirm("Clear Cart", e.getMessage()); // Clear cart & add new food item from different restaurant
             if (confirm) {
                 CustomerService.clearCart();
+                parentController.cartItems.clear();
                 addFoodItemToCart();
             }
         } catch (InvalidQuantityException e) {
             AlertHandler.showWarning("Failed Operation", e.getMessage());
         } catch (CartException e) {
             AlertHandler.showError("Internal Server Error", e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

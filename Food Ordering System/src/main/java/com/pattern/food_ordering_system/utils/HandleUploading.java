@@ -24,7 +24,6 @@ public class HandleUploading {
                 }
                 String imgType = imageName.substring(imageName.lastIndexOf('.') + 1);
                 String newImageName = UUID.randomUUID().toString() + '.' + imgType;
-                System.out.println(newImageName);
                 File outputFile = new File(folder, newImageName);
 
                 ImageIO.write(bImage, imgType, outputFile);

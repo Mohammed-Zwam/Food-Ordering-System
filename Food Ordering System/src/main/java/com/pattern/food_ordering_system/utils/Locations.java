@@ -14,11 +14,13 @@ public class Locations {
     public static final List<String> ZONES = new ArrayList<>();
 
     static {
-        ZONES.add("El Marg");
+        ZONES.add("Maadi");
         ZONES.add("Tagammu");
         ZONES.add("Abbasiya");
         ZONES.add("Ain Shams");
+        ZONES.add("Faisal");
         ZONES.add("Ezbet El Nakhl");
+        ZONES.add("El Marg");
         ZONES.add("Helmeyat El Zaytoun");
         ZONES.add("Matareya");
         ZONES.add("Gesr El Suez");
@@ -30,7 +32,6 @@ public class Locations {
         ZONES.add("Rehab");
         ZONES.add("Tagammu 1");
         ZONES.add("Tagammu 3");
-        ZONES.add("Maadi");
         ZONES.add("Zahraa Maadi");
         ZONES.add("Dar El Salam");
         ZONES.add("El Basatin");
@@ -42,7 +43,6 @@ public class Locations {
         ZONES.add("Mohandessin");
         ZONES.add("Agouza");
         ZONES.add("Haram");
-        ZONES.add("Faisal");
         ZONES.add("6th October");
         ZONES.add("Sheikh Zayed");
         ZONES.add("Imbaba");

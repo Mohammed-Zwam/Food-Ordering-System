@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -27,10 +28,14 @@ import java.util.ResourceBundle;
 public class DeliveryController implements Initializable {
     private final Delivery driver = (Delivery) UserFactory.getUser();
 
-    @FXML private Label lblWelcome;
-    @FXML private VBox categoriesContainer;
-    @FXML private ImageView profileImage;
-    @FXML private Button refreshBtn;
+    @FXML
+    private Label lblWelcome;
+    @FXML
+    private VBox categoriesContainer;
+    @FXML
+    private ImageView profileImage;
+    @FXML
+    private Button refreshBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -93,12 +98,8 @@ public class DeliveryController implements Initializable {
                 && !imgPath.equalsIgnoreCase("default")
                 && !imgPath.equalsIgnoreCase("null")) {
 
-            File file = new File(imgPath);
-
-            if (file.exists()) {
-                Image image = new Image(file.toURI().toString());
-                profileImage.setImage(image);
-            }
+            Image image = new Image(Paths.get(System.getProperty("user.dir") + imgPath).toUri().toString());
+            profileImage.setImage(image);
         }
     }
 
