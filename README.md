@@ -20,7 +20,9 @@ The system supports multiple user roles and demonstrates strong software enginee
 
 ## Database Design
 
-![Database Design](./Assets/ERD.png)
+<p align="center">
+  <img src="./Assets/ERD.png" alt="Database Design" width="800"/>
+</p>
 
 - MySQL database: `food_ordering_system`  
 - Core tables: Users, Orders, OrderItems, Restaurants, MenuItems, Reviews, Deliveries  
@@ -29,7 +31,11 @@ The system supports multiple user roles and demonstrates strong software enginee
 
 ## Demo Video
 
-[![Watch Demo](./Assets/DEMO-Thumbnail.png)](./Assets/DEMO.mp4)
+<p align="center">
+  <a href="./Assets/DEMO.mp4">
+    <img src="./Assets/DEMO-Thumbnail.png" alt="Watch Demo" width="700"/>
+  </a>
+</p>
 
 ---
 
