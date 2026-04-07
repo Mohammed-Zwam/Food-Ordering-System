@@ -1,7 +1,5 @@
-<h1>
-    <center>
-        Food Ordering System
-    </center>
+<h1 align="center">
+    Food Ordering System
 </h1>
 
 <p align="center">
