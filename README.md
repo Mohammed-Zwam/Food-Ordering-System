@@ -110,7 +110,8 @@ The system supports multiple user roles and demonstrates strong software enginee
 
 ## Project Structure
 
-> com.pattern.food_ordering_system/
+```
+com.pattern.food_ordering_system/
 ├── config/
 ├── controller/
 ├── entity/
@@ -119,7 +120,7 @@ The system supports multiple user roles and demonstrates strong software enginee
 ├── model/
 ├── validatorMW/
 └── utils/
-
+```
 
 ---
 
