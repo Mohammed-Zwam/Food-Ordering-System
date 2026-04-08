@@ -18,6 +18,16 @@ The system supports multiple user roles and demonstrates strong software enginee
 
 ---
 
+## Demo Video
+
+<p align="center">
+  <a href="https://drive.google.com/file/d/1dtM4RGloMaTy0qhR7l0zP6pMNuqTpcAB/view">
+    <img src="./Assets/DEMO-Thumbnail.png" alt="Watch Demo" width="700"/>
+  </a>
+</p>
+
+---
+
 ## Database Design
 
 <p align="center">
@@ -29,15 +39,6 @@ The system supports multiple user roles and demonstrates strong software enginee
 
 ---
 
-## Demo Video
-
-<p align="center">
-  <a href="./Assets/DEMO.mp4">
-    <img src="./Assets/DEMO-Thumbnail.png" alt="Watch Demo" width="700"/>
-  </a>
-</p>
-
----
 
 ## Key Features
 
