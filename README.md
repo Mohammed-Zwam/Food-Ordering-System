@@ -22,10 +22,26 @@ The system supports multiple user roles and demonstrates strong software enginee
 
 <p align="center">
   <a href="https://drive.google.com/file/d/1dtM4RGloMaTy0qhR7l0zP6pMNuqTpcAB/view">
-    <img src="./Assets/DEMO-Thumbnail.png" alt="Watch Demo" width="700"/>
-    <figcaption>Click to Watch</figcaption>
+        ▶️ Click to Watch
+        <br>
+        <br>
+        <img src="./Assets/DEMO-Thumbnail.png" alt="Watch Demo" width="700"/>
   </a>
 </p>
+
+---
+
+## Design Patterns Used
+
+- **Facade Pattern** → Layered architecture & separation of concerns  
+- **Factory Pattern** → User role & payment handling  
+- **Strategy Pattern** → Role-based navigation  
+- **Adapter Pattern** → Payment abstraction  
+- **Composite Pattern** → Menu hierarchy  
+- **State Pattern** → Order lifecycle  
+- **Proxy Pattern** → Cart validation  
+- **Flyweight Pattern** → View caching & performance  
+- **Singleton Pattern** → Database connection  
 
 ---
 
@@ -80,19 +96,6 @@ The system supports multiple user roles and demonstrates strong software enginee
 
 ---
 
-## Design Patterns Used
-
-- **Facade Pattern** → Layered architecture & separation of concerns  
-- **Factory Pattern** → User role & payment handling  
-- **Strategy Pattern** → Role-based navigation  
-- **Adapter Pattern** → Payment abstraction  
-- **Composite Pattern** → Menu hierarchy  
-- **State Pattern** → Order lifecycle  
-- **Proxy Pattern** → Cart validation  
-- **Flyweight Pattern** → View caching & performance  
-- **Singleton Pattern** → Database connection  
-
----
 
 ## Tech Stack
 
