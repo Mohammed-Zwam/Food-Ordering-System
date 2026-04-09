@@ -23,6 +23,7 @@ The system supports multiple user roles and demonstrates strong software enginee
 <p align="center">
   <a href="https://drive.google.com/file/d/1dtM4RGloMaTy0qhR7l0zP6pMNuqTpcAB/view">
     <img src="./Assets/DEMO-Thumbnail.png" alt="Watch Demo" width="700"/>
+    <figcaption>Click to Watch</figcaption>
   </a>
 </p>
 
